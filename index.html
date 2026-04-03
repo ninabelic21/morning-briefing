@@ -5,347 +5,397 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Morning Briefing — April 3, 2026</title>
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { background: #111827; color: #f3f4f6; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; max-width: 700px; margin: 0 auto; }
-  .header { text-align: center; margin-bottom: 24px; }
-  .date { color: #60a5fa; font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; }
-  .title { font-size: 26px; font-weight: 800; margin: 6px 0 2px; }
-  .subtitle { color: #9ca3af; font-size: 13px; }
-  .movers { display: flex; justify-content: center; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
-  .mover { background: #1f2937; border-radius: 10px; padding: 10px 16px; text-align: center; min-width: 100px; }
-  .mover.green { border: 1px solid rgba(34,197,94,0.3); }
-  .mover.red { border: 1px solid rgba(239,68,68,0.3); }
-  .mover-label { color: #9ca3af; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
-  .mover-value { font-size: 20px; font-weight: 800; margin-top: 2px; }
-  .green-text { color: #22c55e; }
-  .red-text { color: #ef4444; }
-  .amber-text { color: #f59e0b; }
-  .blue-text { color: #60a5fa; }
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#111827;--card:#1F2937;--text:#F9FAFB;--muted:#9CA3AF;--green:#10B981;--red:#EF4444;--blue:#3B82F6;--amber:#F59E0B;--purple:#8B5CF6;--cyan:#06B6D4;--border:#374151}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;padding:16px;max-width:900px;margin:0 auto;line-height:1.5}
+h1{font-size:24px;font-weight:700}
+h3{font-size:14px;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;padding-bottom:6px}
+.sub{color:var(--muted);font-size:14px;margin-top:4px}
+.note{color:var(--amber);font-size:12px;margin-top:4px}
+.header{border-bottom:1px solid var(--border);padding-bottom:16px;margin-bottom:20px}
 
-  /* Dashboard */
-  .dashboard { background: #1f2937; border-radius: 12px; padding: 16px; margin-bottom: 24px; }
-  .dash-title { font-size: 15px; font-weight: 700; margin-bottom: 14px; text-align: center; }
-  .panel-title { font-size: 12px; font-weight: 700; color: #60a5fa; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; margin-top: 18px; }
-  .panel-title:first-child { margin-top: 0; }
-  .bar-row { display: flex; align-items: center; margin-bottom: 6px; }
-  .bar-label { font-size: 12px; font-weight: 600; width: 85px; flex-shrink: 0; }
-  .bar-track { flex: 1; height: 20px; background: #374151; border-radius: 4px; overflow: hidden; }
-  .bar-fill { height: 100%; border-radius: 4px; min-width: 4px; }
-  .bar-value { font-size: 12px; font-weight: 700; width: 55px; text-align: right; flex-shrink: 0; margin-left: 8px; }
+/* Tabs */
+.tabs{display:flex;gap:4px;margin-bottom:24px;flex-wrap:wrap}
+.tab{padding:8px 20px;border-radius:6px;border:none;cursor:pointer;font-size:13px;font-weight:600;background:var(--card);color:var(--muted);transition:all .2s}
+.tab:hover{background:var(--border)}
+.tab.active{background:var(--blue);color:#fff}
+.tab-content{display:none}
+.tab-content.active{display:block}
 
-  /* Heatmap */
-  .heatmap { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
-  .heat-cell { border-radius: 8px; padding: 10px; text-align: center; }
-  .heat-cell .name { font-size: 12px; font-weight: 700; }
-  .heat-cell .val { font-size: 14px; font-weight: 800; }
-  .heat-green { background: rgba(34,197,94,0.15); border: 1px solid rgba(34,197,94,0.3); }
-  .heat-red { background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); }
+/* News cards */
+.section{margin-bottom:24px}
+.section h3{border-bottom:2px solid currentColor;color:inherit}
+.card{margin-bottom:10px;padding:12px;background:var(--card);border-radius:8px;border-left:3px solid currentColor}
+.tag{display:inline-block;padding:2px 8px;border-radius:9999px;font-size:11px;font-weight:600;color:var(--text);margin-bottom:4px}
+.headline{font-weight:600;font-size:14px;margin-bottom:4px}
+.summary{font-size:13px;color:var(--muted);line-height:1.5}
 
-  /* Oil chart */
-  .oil-note { color: #9ca3af; font-size: 12px; margin-bottom: 10px; }
-  .oil-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 3px; align-items: end; height: 100px; }
-  .oil-bar { border-radius: 4px 4px 0 0; width: 100%; }
-  .oil-labels { display: grid; grid-template-columns: repeat(10, 1fr); gap: 3px; margin-top: 4px; }
-  .oil-lbl { text-align: center; font-size: 9px; color: #9ca3af; }
-  .oil-legend { text-align: center; color: #9ca3af; font-size: 10px; margin-top: 6px; }
+/* Charts */
+.bar-row{display:flex;align-items:center;margin-bottom:8px;gap:8px}
+.bar-label{width:90px;font-size:12px;color:var(--muted);text-align:right;flex-shrink:0}
+.bar-track{flex:1;height:24px;background:var(--card);border-radius:4px;position:relative;overflow:hidden}
+.bar-fill{height:100%;border-radius:4px;display:flex;align-items:center;padding-left:8px;font-size:11px;font-weight:600;color:var(--text);min-width:fit-content;transition:width .5s}
+.bar-value{font-size:12px;font-weight:600;width:60px;text-align:right;flex-shrink:0}
 
-  /* Section */
-  .section { margin-bottom: 22px; }
-  .section-title { font-size: 17px; font-weight: 700; padding-bottom: 7px; border-bottom: 2px solid #374151; margin-bottom: 10px; }
-  .story { background: #1f2937; border-radius: 10px; padding: 13px 15px; margin-bottom: 8px; }
-  .story-headline { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
-  .story-body { font-size: 13px; color: #9ca3af; line-height: 1.6; }
-  .story-source { font-size: 11px; color: #60a5fa; margin-top: 4px; font-weight: 600; }
+/* Heatmap */
+.heatmap{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;margin-bottom:24px}
+.heat-cell{border-radius:8px;padding:12px;text-align:center}
+.heat-name{font-size:12px;color:var(--muted);margin-bottom:4px}
+.heat-val{font-size:18px;font-weight:700}
 
-  /* Watchlist */
-  .wl-card { background: #1f2937; border-radius: 10px; padding: 12px 14px; margin-bottom: 6px; display: flex; align-items: center; gap: 12px; }
-  .wl-card.green-border { border-left: 3px solid #22c55e; }
-  .wl-card.red-border { border-left: 3px solid #ef4444; }
-  .wl-info { flex: 1; }
-  .wl-ticker { font-size: 14px; font-weight: 800; }
-  .wl-name { font-size: 11px; color: #9ca3af; }
-  .wl-right { text-align: right; }
-  .wl-price { font-size: 16px; font-weight: 700; }
-  .wl-change { font-size: 12px; font-weight: 700; }
-  .wl-note { font-size: 11px; color: #60a5fa; margin-top: 2px; }
+/* Watchlist table */
+.wl-row{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:var(--card);border-radius:8px;margin-bottom:6px}
+.wl-ticker{font-weight:700;font-size:14px}
+.wl-name{color:var(--muted);font-size:12px;margin-left:8px}
+.wl-price{font-size:14px;font-weight:600}
+.wl-change{margin-left:12px;font-size:13px;font-weight:600}
 
-  /* Worth watching */
-  .ww { background: rgba(96,165,250,0.1); border: 1px solid rgba(96,165,250,0.3); border-radius: 10px; padding: 14px 16px; margin-bottom: 22px; }
-  .ww-label { font-size: 11px; font-weight: 700; color: #60a5fa; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 4px; }
-  .ww-headline { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
-  .ww-body { font-size: 13px; color: #9ca3af; line-height: 1.6; }
+/* Spotlight */
+.spotlight-box{background:var(--card);border-radius:12px;padding:20px;margin-bottom:24px;border-left:4px solid var(--amber)}
+.spotlight-title{font-size:18px;color:var(--amber);margin-bottom:8px;text-transform:none;letter-spacing:0;border:none;padding:0}
+.spotlight-text{color:var(--muted);font-size:13px;line-height:1.6}
+.event-row{display:flex;gap:12px;margin-bottom:8px;padding:10px 14px;background:var(--card);border-radius:8px}
+.event-date{color:var(--amber);font-weight:700;font-size:13px;white-space:nowrap}
+.event-desc{color:var(--muted);font-size:13px;flex:1}
+.event-rate{font-weight:700;font-size:13px;white-space:nowrap}
+.watch-box{margin-top:24px;background:var(--card);border-radius:12px;padding:16px}
+.watch-box h4{font-size:14px;color:var(--purple);margin-bottom:8px;text-transform:none;letter-spacing:0}
+.watch-box li{color:var(--muted);font-size:13px;line-height:1.8}
 
-  .footer { text-align: center; color: #9ca3af; font-size: 11px; padding: 16px 0; border-top: 1px solid #374151; line-height: 1.6; }
+.footer{margin-top:32px;padding-top:16px;border-top:1px solid var(--border);text-align:center;color:var(--muted);font-size:11px}
 
-  /* Tabs */
-  .tabs { display: flex; border-radius: 10px; overflow: hidden; border: 1px solid #374151; margin-bottom: 14px; }
-  .tab { flex: 1; padding: 9px 6px; text-align: center; font-size: 11px; font-weight: 600; cursor: pointer; background: #1f2937; color: #9ca3af; border: none; transition: all 0.2s; }
-  .tab.active { background: #60a5fa; color: #111827; }
-  .tab-panel { display: none; }
-  .tab-panel.active { display: block; }
+/* Chart legend */
+.legend{display:flex;gap:16px;margin-bottom:12px;font-size:12px;color:var(--muted)}
+.legend-dot{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px;vertical-align:middle}
+
+/* Tariff step chart */
+.step-chart{position:relative;height:200px;margin:16px 0 24px;border-left:1px solid var(--border);border-bottom:1px solid var(--border);padding:0 0 24px 40px}
+.step-bar{position:absolute;background:var(--amber);border-radius:4px 4px 0 0;bottom:24px;opacity:0.85;display:flex;align-items:flex-end;justify-content:center;padding-bottom:4px;font-size:11px;font-weight:700;color:var(--bg)}
+.step-label{position:absolute;bottom:0;font-size:10px;color:var(--muted);text-align:center;transform:translateX(-50%)}
 </style>
 </head>
 <body>
 
-<!-- Header -->
 <div class="header">
-  <div class="date">April 3, 2026 — Friday</div>
-  <div class="title">Morning Briefing</div>
-  <div class="subtitle">Your daily digest of what matters in tech, markets, and the world</div>
-  <div class="movers">
-    <div class="mover green"><div class="mover-label">Brent Crude</div><div class="mover-value green-text">+10.4%</div></div>
-    <div class="mover red"><div class="mover-label">DAX</div><div class="mover-value red-text">-1.39%</div></div>
-    <div class="mover red"><div class="mover-label">LLY</div><div class="mover-value red-text">-1.98%</div></div>
+  <h1>Morning Briefing</h1>
+  <div class="sub">April 3, 2026 — Good Friday</div>
+  <div class="note">US markets closed. Data as of April 2 close.</div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="showTab('news')">News</button>
+  <button class="tab" onclick="showTab('markets')">Markets</button>
+  <button class="tab" onclick="showTab('watchlist')">Watchlist</button>
+  <button class="tab" onclick="showTab('spotlight')">Spotlight</button>
+</div>
+
+<!-- NEWS TAB -->
+<div id="news" class="tab-content active">
+
+<div class="section" style="color:var(--cyan)">
+<h3>Technology & AI</h3>
+<div class="card" style="border-color:var(--cyan)">
+  <span class="tag" style="background:var(--cyan)">AI</span>
+  <div class="headline">OpenAI Raises Record $122B at $852B Valuation</div>
+  <div class="summary">Backed by Amazon, Nvidia, and SoftBank. Plans to merge tools into a single AI superapp and prepare for an IPO later this year.</div>
+</div>
+<div class="card" style="border-color:var(--cyan)">
+  <span class="tag" style="background:var(--cyan)">AI</span>
+  <div class="headline">Microsoft to Invest $10B in Japan AI Infrastructure</div>
+  <div class="summary">1.6 trillion yen investment between 2026–2029, partnering with Sakura Internet and SoftBank to expand Azure compute capacity.</div>
+</div>
+<div class="card" style="border-color:var(--cyan)">
+  <span class="tag" style="background:var(--cyan)">AI</span>
+  <div class="headline">Alibaba Unveils Qwen3.5 Omni Multimodal AI</div>
+  <div class="summary">New model processes text, images, audio, and video in 100+ languages with a novel architecture for smoother speech synthesis.</div>
+</div>
+<div class="card" style="border-color:var(--cyan)">
+  <span class="tag" style="background:var(--cyan)">Cybersecurity</span>
+  <div class="headline">Anthropic Hit by Double Leak: Claude Mythos & CLI Source</div>
+  <div class="summary">Advanced AI model details exposed via unsecured CMS; Claude Code CLI source accidentally published on npm (500K+ lines). No customer data compromised.</div>
+</div>
+<div class="card" style="border-color:var(--cyan)">
+  <span class="tag" style="background:var(--cyan)">Cybersecurity</span>
+  <div class="headline">NoVoice Rootkit Infects 2.3M Android Devices</div>
+  <div class="summary">Malware campaign spread through 50+ Google Play apps. Google has removed affected apps and urges device updates.</div>
+</div>
+</div>
+
+<div class="section" style="color:var(--blue)">
+<h3>World Politics</h3>
+<div class="card" style="border-color:var(--blue)">
+  <span class="tag" style="background:var(--blue)">US/Middle East</span>
+  <div class="headline">US Fighter Jet Downed Over Iran</div>
+  <div class="summary">First confirmed US aircraft loss since military operations began February 28. Escalation concerns intensify.</div>
+</div>
+<div class="card" style="border-color:var(--blue)">
+  <span class="tag" style="background:var(--blue)">Russia/EU</span>
+  <div class="headline">Medvedev: Russia Must Oppose Ukraine's EU Bid</div>
+  <div class="summary">Says EU is transforming into a military alliance 'worse than NATO' — Russia should actively block Ukraine's membership path.</div>
+</div>
+<div class="card" style="border-color:var(--blue)">
+  <span class="tag" style="background:var(--blue)">EU</span>
+  <div class="headline">Hungary Election April 12 — Pivotal for Europe</div>
+  <div class="summary">Under Orbán, Hungary has blocked EU asylum policy, defense cooperation, Ukraine talks, and €90B in loans. Election seen as continent-shaping.</div>
+</div>
+<div class="card" style="border-color:var(--blue)">
+  <span class="tag" style="background:var(--blue)">EU</span>
+  <div class="headline">EU Parliament Advances Trade Deal & AI Rules</div>
+  <div class="summary">MEPs adopted positions on EU-US Turnberry trade deal tariffs and agreed to simplify AI rules and establish anti-corruption framework.</div>
+</div>
+</div>
+
+<div class="section" style="color:var(--red)">
+<h3>Austria</h3>
+<div class="card" style="border-color:var(--red)">
+  <span class="tag" style="background:var(--red)">Policy</span>
+  <div class="headline">Fuel Price Brake Takes Effect</div>
+  <div class="summary">Spritpreisbremse launched April 2 — diesel and petrol cut by 10¢/litre (5¢ tax cut + 5¢ mandated company reduction). E-Control monitoring through year-end.</div>
+</div>
+<div class="card" style="border-color:var(--red)">
+  <span class="tag" style="background:var(--red)">Parliament</span>
+  <div class="headline">FPÖ Parliamentary Questions Costing Millions</div>
+  <div class="summary">Far-right FPÖ submitting ~14 questions/day. Social Minister Schumann received 685 questions costing ~€2.05M since March 2025.</div>
+</div>
+<div class="card" style="border-color:var(--red)">
+  <span class="tag" style="background:var(--red)">Parliament</span>
+  <div class="headline">Parliament in Easter Recess</div>
+  <div class="summary">No Nationalrat or committee business scheduled during Easter week.</div>
+</div>
+</div>
+
+<div class="section" style="color:var(--amber)">
+<h3>Geopolitics</h3>
+<div class="card" style="border-color:var(--amber)">
+  <span class="tag" style="background:var(--amber);color:var(--bg)">Middle East</span>
+  <div class="headline">Iran Conflict Spills Across Region — Oil Hits $100/bbl</div>
+  <div class="summary">US-Iran operations trigger Hezbollah clashes, Houthi attacks in Yemen, drone strikes across the Gulf. Energy markets and maritime trade severely disrupted.</div>
+</div>
+<div class="card" style="border-color:var(--amber)">
+  <span class="tag" style="background:var(--amber);color:var(--bg)">Diplomacy</span>
+  <div class="headline">Oman Emerges as Key Back-Channel Mediator</div>
+  <div class="summary">Nuclear negotiations between US and Iran held in Muscat. Focus: enrichment, sanctions relief, regional de-escalation.</div>
+</div>
+<div class="card" style="border-color:var(--amber)">
+  <span class="tag" style="background:var(--amber);color:var(--bg)">US-China</span>
+  <div class="headline">Xi-Trump Summit Expected in April</div>
+  <div class="summary">Anticipated trade arrangement centered on US semiconductor leverage vs. China's critical minerals and rare earth supply dominance.</div>
+</div>
+<div class="card" style="border-color:var(--amber)">
+  <span class="tag" style="background:var(--amber);color:var(--bg)">Ukraine</span>
+  <div class="headline">Ukraine on the Defensive as Russia Advances</div>
+  <div class="summary">Ukraine lost its Kursk region foothold. Russia grinding forward along the front. Diplomatic path remains unclear.</div>
+</div>
+</div>
+
+<div class="section" style="color:var(--purple)">
+<h3>Trade & Tariffs</h3>
+<div class="card" style="border-color:var(--purple)">
+  <span class="tag" style="background:var(--purple)">Trade</span>
+  <div class="headline">Liberation Day +1 Year: New Steel/Aluminum/Copper Tariffs</div>
+  <div class="summary">Trump signed April 2: 50% on pure steel/aluminum/copper goods, 25% on derivatives, 10% on products using US-sourced metals. Effective April 6.</div>
+</div>
+<div class="card" style="border-color:var(--purple)">
+  <span class="tag" style="background:var(--purple)">Trade</span>
+  <div class="headline">Effective US Tariff Rate at 13.7%</div>
+  <div class="summary">After SCOTUS struck IEEPA tariffs, admin imposed 10% global duty under Trade Act §122 for 150 days (until July 24). Avg household impact: $1,500/year.</div>
+</div>
+</div>
+
+</div>
+
+<!-- MARKETS TAB -->
+<div id="markets" class="tab-content">
+
+<h3 style="color:var(--text);text-transform:none;letter-spacing:0;font-size:16px;margin-bottom:4px">Major Indices — Daily vs Weekly Change (%)</h3>
+<div class="legend">
+  <span><span class="legend-dot" style="background:var(--blue)"></span>Daily</span>
+  <span><span class="legend-dot" style="background:var(--cyan)"></span>Weekly</span>
+</div>
+
+<div style="margin-bottom:32px">
+<div class="bar-row">
+  <div class="bar-label">S&P 500</div>
+  <div class="bar-track"><div class="bar-fill" style="width:2.2%;background:var(--blue)"></div></div>
+  <div class="bar-value" style="color:var(--green)">+0.11%</div>
+</div>
+<div class="bar-row">
+  <div class="bar-label"></div>
+  <div class="bar-track"><div class="bar-fill" style="width:68%;background:var(--cyan)"></div></div>
+  <div class="bar-value" style="color:var(--green)">+3.40%</div>
+</div>
+<div style="height:12px"></div>
+
+<div class="bar-row">
+  <div class="bar-label">NASDAQ</div>
+  <div class="bar-track"><div class="bar-fill" style="width:3.6%;background:var(--blue)"></div></div>
+  <div class="bar-value" style="color:var(--green)">+0.18%</div>
+</div>
+<div class="bar-row">
+  <div class="bar-label"></div>
+  <div class="bar-track"><div class="bar-fill" style="width:88%;background:var(--cyan)"></div></div>
+  <div class="bar-value" style="color:var(--green)">+4.40%</div>
+</div>
+<div style="height:12px"></div>
+
+<div class="bar-row">
+  <div class="bar-label">Dow Jones</div>
+  <div class="bar-track"><div class="bar-fill" style="width:1.6%;background:var(--blue)"></div></div>
+  <div class="bar-value" style="color:var(--green)">+0.08%</div>
+</div>
+<div class="bar-row">
+  <div class="bar-label"></div>
+  <div class="bar-track"><div class="bar-fill" style="width:60%;background:var(--cyan)"></div></div>
+  <div class="bar-value" style="color:var(--green)">+3.00%</div>
+</div>
+<div style="height:12px"></div>
+
+<div class="bar-row">
+  <div class="bar-label">DAX</div>
+  <div class="bar-track"><div class="bar-fill" style="width:11.2%;background:var(--red)"></div></div>
+  <div class="bar-value" style="color:var(--red)">-0.56%</div>
+</div>
+<div class="bar-row">
+  <div class="bar-label"></div>
+  <div class="bar-track"><div class="bar-fill" style="width:24%;background:var(--cyan)"></div></div>
+  <div class="bar-value" style="color:var(--green)">+1.20%</div>
+</div>
+</div>
+
+<h3 style="color:var(--text);text-transform:none;letter-spacing:0;font-size:16px;margin-bottom:16px">Sector Heatmap — Daily Change (%)</h3>
+<div class="heatmap">
+  <div class="heat-cell" style="background:rgba(16,185,129,0.45)"><div class="heat-name">Technology</div><div class="heat-val" style="color:var(--green)">+1.8%</div></div>
+  <div class="heat-cell" style="background:rgba(239,68,68,0.30)"><div class="heat-name">Healthcare</div><div class="heat-val" style="color:var(--red)">-0.9%</div></div>
+  <div class="heat-cell" style="background:rgba(16,185,129,0.25)"><div class="heat-name">Financials</div><div class="heat-val" style="color:var(--green)">+0.6%</div></div>
+  <div class="heat-cell" style="background:rgba(16,185,129,0.55)"><div class="heat-name">Energy</div><div class="heat-val" style="color:var(--green)">+2.4%</div></div>
+  <div class="heat-cell" style="background:rgba(16,185,129,0.20)"><div class="heat-name">Consumer Disc.</div><div class="heat-val" style="color:var(--green)">+0.3%</div></div>
+  <div class="heat-cell" style="background:rgba(239,68,68,0.18)"><div class="heat-name">Industrials</div><div class="heat-val" style="color:var(--red)">-0.2%</div></div>
+  <div class="heat-cell" style="background:rgba(16,185,129,0.33)"><div class="heat-name">Materials</div><div class="heat-val" style="color:var(--green)">+1.1%</div></div>
+  <div class="heat-cell" style="background:rgba(239,68,68,0.22)"><div class="heat-name">Utilities</div><div class="heat-val" style="color:var(--red)">-0.4%</div></div>
+  <div class="heat-cell" style="background:rgba(239,68,68,0.27)"><div class="heat-name">Real Estate</div><div class="heat-val" style="color:var(--red)">-0.7%</div></div>
+  <div class="heat-cell" style="background:rgba(16,185,129,0.30)"><div class="heat-name">Comm. Services</div><div class="heat-val" style="color:var(--green)">+0.9%</div></div>
+</div>
+</div>
+
+<!-- WATCHLIST TAB -->
+<div id="watchlist" class="tab-content">
+
+<h3 style="color:var(--text);text-transform:none;letter-spacing:0;font-size:16px;margin-bottom:16px">Your Watchlist Performance</h3>
+
+<div style="margin-bottom:24px">
+<div class="bar-row">
+  <div class="bar-label">MPWR</div>
+  <div class="bar-track"><div class="bar-fill" style="width:43%;background:var(--green)">+2.15%</div></div>
+  <div class="bar-value">$1,118.49</div>
+</div>
+<div class="bar-row">
+  <div class="bar-label">NVDA</div>
+  <div class="bar-track"><div class="bar-fill" style="width:18.6%;background:var(--green)">+0.93%</div></div>
+  <div class="bar-value">$177.39</div>
+</div>
+<div class="bar-row">
+  <div class="bar-label">MSFT</div>
+  <div class="bar-track"><div class="bar-fill" style="width:14.4%;background:var(--green)">+0.72%</div></div>
+  <div class="bar-value">$373.40</div>
+</div>
+<div class="bar-row">
+  <div class="bar-label">WMT</div>
+  <div class="bar-track"><div class="bar-fill" style="width:7%;background:var(--green)">+0.35%</div></div>
+  <div class="bar-value">$125.81</div>
+</div>
+<div class="bar-row">
+  <div class="bar-label">ETF146</div>
+  <div class="bar-track"><div class="bar-fill" style="width:3.6%;background:var(--green)">+0.18%</div></div>
+  <div class="bar-value">€110.25</div>
+</div>
+<div class="bar-row">
+  <div class="bar-label">A0RPWJ</div>
+  <div class="bar-track"><div class="bar-fill" style="width:6.2%;background:var(--red)">-0.31%</div></div>
+  <div class="bar-value">€28.52</div>
+</div>
+<div class="bar-row">
+  <div class="bar-label">LLY</div>
+  <div class="bar-track"><div class="bar-fill" style="width:39.6%;background:var(--red)">-1.98%</div></div>
+  <div class="bar-value">$935.58</div>
+</div>
+</div>
+
+<div>
+  <div class="wl-row"><div><span class="wl-ticker">NVDA</span><span class="wl-name">NVIDIA</span></div><div><span class="wl-price">$177.39</span><span class="wl-change" style="color:var(--green)">+0.93%</span></div></div>
+  <div class="wl-row"><div><span class="wl-ticker">WMT</span><span class="wl-name">Walmart</span></div><div><span class="wl-price">$125.81</span><span class="wl-change" style="color:var(--green)">+0.35%</span></div></div>
+  <div class="wl-row"><div><span class="wl-ticker">LLY</span><span class="wl-name">Eli Lilly</span></div><div><span class="wl-price">$935.58</span><span class="wl-change" style="color:var(--red)">-1.98%</span></div></div>
+  <div class="wl-row"><div><span class="wl-ticker">MSFT</span><span class="wl-name">Microsoft</span></div><div><span class="wl-price">$373.40</span><span class="wl-change" style="color:var(--green)">+0.72%</span></div></div>
+  <div class="wl-row"><div><span class="wl-ticker">MPWR</span><span class="wl-name">Monolithic Power</span></div><div><span class="wl-price">$1,118.49</span><span class="wl-change" style="color:var(--green)">+2.15%</span></div></div>
+  <div class="wl-row"><div><span class="wl-ticker">A0RPWJ</span><span class="wl-name">iShares MSCI EM</span></div><div><span class="wl-price">€28.52</span><span class="wl-change" style="color:var(--red)">-0.31%</span></div></div>
+  <div class="wl-row"><div><span class="wl-ticker">ETF146</span><span class="wl-name">Amundi MSCI World</span></div><div><span class="wl-price">€110.25</span><span class="wl-change" style="color:var(--green)">+0.18%</span></div></div>
+</div>
+</div>
+
+<!-- SPOTLIGHT TAB -->
+<div id="spotlight" class="tab-content">
+
+<div class="spotlight-box">
+  <h3 class="spotlight-title">Spotlight: Liberation Day +1 Year — The Tariff Landscape</h3>
+  <p class="spotlight-text">
+    One year after "Liberation Day," the US tariff regime has been reshaped by courts, negotiations, and new executive actions.
+    The Supreme Court struck down broad IEEPA tariffs in January, but the administration pivoted to Section 122, imposing a 10% global
+    duty now raised to 15%. Yesterday, Trump signed new steel/aluminum/copper tariffs up to 50%. The effective average rate sits at 13.7%,
+    costing households ~$1,500/year — the largest US tax increase as % of GDP since 1993.
+  </p>
+</div>
+
+<h3 style="color:var(--text);text-transform:none;letter-spacing:0;font-size:16px;margin-bottom:16px">US Effective Tariff Rate Timeline (2026)</h3>
+
+<div style="display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap">
+  <div style="flex:1;min-width:120px;background:var(--card);border-radius:8px;padding:12px;text-align:center;border-top:3px solid var(--amber)">
+    <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Jan 20</div>
+    <div style="font-size:22px;font-weight:700;color:var(--amber)">5%</div>
+    <div style="font-size:10px;color:var(--muted);margin-top:4px">SCOTUS strikes IEEPA</div>
+  </div>
+  <div style="flex:1;min-width:120px;background:var(--card);border-radius:8px;padding:12px;text-align:center;border-top:3px solid var(--amber)">
+    <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Feb 24</div>
+    <div style="font-size:22px;font-weight:700;color:var(--amber)">10%</div>
+    <div style="font-size:10px;color:var(--muted);margin-top:4px">Global duty begins</div>
+  </div>
+  <div style="flex:1;min-width:120px;background:var(--card);border-radius:8px;padding:12px;text-align:center;border-top:3px solid var(--amber)">
+    <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Mar 15</div>
+    <div style="font-size:22px;font-weight:700;color:var(--amber)">15%</div>
+    <div style="font-size:10px;color:var(--muted);margin-top:4px">Rate raised</div>
+  </div>
+  <div style="flex:1;min-width:120px;background:var(--card);border-radius:8px;padding:12px;text-align:center;border-top:3px solid var(--red)">
+    <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Apr 2</div>
+    <div style="font-size:22px;font-weight:700;color:var(--red)">13.7%</div>
+    <div style="font-size:10px;color:var(--muted);margin-top:4px">Steel/Al/Cu tariffs</div>
   </div>
 </div>
 
-<!-- Dashboard -->
-<div class="dashboard">
-  <div class="dash-title">📊 Dashboard</div>
-  <div class="tabs">
-    <button class="tab active" onclick="showTab(0)">Markets</button>
-    <button class="tab" onclick="showTab(1)">Sectors</button>
-    <button class="tab" onclick="showTab(2)">Watchlist</button>
-    <button class="tab" onclick="showTab(3)">Oil</button>
-  </div>
+<h3 style="color:var(--text);text-transform:none;letter-spacing:0;font-size:16px;margin-bottom:12px">Key Events</h3>
+<div class="event-row"><span class="event-date">Jan 20</span><span class="event-desc">SCOTUS strikes IEEPA tariffs</span><span class="event-rate">5%</span></div>
+<div class="event-row"><span class="event-date">Feb 24</span><span class="event-desc">10% global duty begins</span><span class="event-rate">10%</span></div>
+<div class="event-row"><span class="event-date">Mar 15</span><span class="event-desc">Rate raised to 15%</span><span class="event-rate">15%</span></div>
+<div class="event-row"><span class="event-date">Apr 2</span><span class="event-desc">Steel/Al/Cu tariffs signed</span><span class="event-rate">13.7%</span></div>
 
-  <!-- Tab 0: Markets -->
-  <div class="tab-panel active" id="panel-0">
-    <div class="panel-title">Market Performance (% Change)</div>
-    <div class="bar-row"><span class="bar-label">S&P 500</span><div class="bar-track"><div class="bar-fill" style="width:8%;background:#22c55e;"></div></div><span class="bar-value green-text">+0.11%</span></div>
-    <div class="bar-row"><span class="bar-label">NASDAQ</span><div class="bar-track"><div class="bar-fill" style="width:12%;background:#22c55e;"></div></div><span class="bar-value green-text">+0.18%</span></div>
-    <div class="bar-row"><span class="bar-label">Dow Jones</span><div class="bar-track"><div class="bar-fill" style="width:9%;background:#ef4444;"></div></div><span class="bar-value red-text">-0.13%</span></div>
-    <div class="bar-row"><span class="bar-label">DAX</span><div class="bar-track"><div class="bar-fill" style="width:50%;background:#ef4444;"></div></div><span class="bar-value red-text">-1.39%</span></div>
-    <div class="bar-row"><span class="bar-label">Brent Crude</span><div class="bar-track"><div class="bar-fill" style="width:100%;background:#f59e0b;"></div></div><span class="bar-value amber-text">+10.4%</span></div>
-  </div>
-
-  <!-- Tab 1: Sectors -->
-  <div class="tab-panel" id="panel-1">
-    <div class="panel-title">Sector Heatmap</div>
-    <div class="heatmap">
-      <div class="heat-cell heat-green"><div class="name">Energy</div><div class="val green-text">+5.2%</div></div>
-      <div class="heat-cell heat-green"><div class="name">Defense</div><div class="val green-text">+3.1%</div></div>
-      <div class="heat-cell heat-green"><div class="name">Tech / AI</div><div class="val green-text">+0.4%</div></div>
-      <div class="heat-cell heat-green"><div class="name">Financials</div><div class="val green-text">+0.3%</div></div>
-      <div class="heat-cell heat-green"><div class="name">Consumer</div><div class="val green-text">+0.2%</div></div>
-      <div class="heat-cell heat-red"><div class="name">Industrials</div><div class="val red-text">-1.2%</div></div>
-      <div class="heat-cell heat-red"><div class="name">Pharma</div><div class="val red-text">-1.5%</div></div>
-      <div class="heat-cell heat-red"><div class="name">Airlines</div><div class="val red-text">-3.8%</div></div>
-    </div>
-  </div>
-
-  <!-- Tab 2: Watchlist chart -->
-  <div class="tab-panel" id="panel-2">
-    <div class="panel-title">Watchlist Performance (% Change)</div>
-    <div class="bar-row"><span class="bar-label">ETF146</span><div class="bar-track"><div class="bar-fill" style="width:56%;background:#22c55e;"></div></div><span class="bar-value green-text">+1.12%</span></div>
-    <div class="bar-row"><span class="bar-label">NVDA</span><div class="bar-track"><div class="bar-fill" style="width:47%;background:#22c55e;"></div></div><span class="bar-value green-text">+0.93%</span></div>
-    <div class="bar-row"><span class="bar-label">MPWR</span><div class="bar-track"><div class="bar-fill" style="width:23%;background:#22c55e;"></div></div><span class="bar-value green-text">+0.45%</span></div>
-    <div class="bar-row"><span class="bar-label">WMT</span><div class="bar-track"><div class="bar-fill" style="width:12%;background:#22c55e;"></div></div><span class="bar-value green-text">+0.23%</span></div>
-    <div class="bar-row"><span class="bar-label">MSFT</span><div class="bar-track"><div class="bar-fill" style="width:4%;background:#22c55e;"></div></div><span class="bar-value green-text">+0.07%</span></div>
-    <div class="bar-row"><span class="bar-label">EEM</span><div class="bar-track"><div class="bar-fill" style="width:35%;background:#ef4444;"></div></div><span class="bar-value red-text">-0.70%</span></div>
-    <div class="bar-row"><span class="bar-label">LLY ⚠️</span><div class="bar-track"><div class="bar-fill" style="width:100%;background:#ef4444;"></div></div><span class="bar-value red-text">-1.98%</span></div>
-  </div>
-
-  <!-- Tab 3: Oil -->
-  <div class="tab-panel" id="panel-3">
-    <div class="panel-title">Spotlight: Brent Crude Oil Surge</div>
-    <div class="oil-note">Oil prices surged <strong>54% in three weeks</strong> as US-Iran conflict escalates. Brent hit <strong>$111.69/bbl</strong> — the highest since 2008.</div>
-    <div class="oil-grid">
-      <div class="oil-bar" style="height:40%;background:#60a5fa;"></div>
-      <div class="oil-bar" style="height:48%;background:#60a5fa;"></div>
-      <div class="oil-bar" style="height:58%;background:#60a5fa;"></div>
-      <div class="oil-bar" style="height:65%;background:#60a5fa;"></div>
-      <div class="oil-bar" style="height:72%;background:#60a5fa;"></div>
-      <div class="oil-bar" style="height:80%;background:#60a5fa;"></div>
-      <div class="oil-bar" style="height:84%;background:#f59e0b;"></div>
-      <div class="oil-bar" style="height:90%;background:#f59e0b;"></div>
-      <div class="oil-bar" style="height:95%;background:#f59e0b;"></div>
-      <div class="oil-bar" style="height:100%;background:#f59e0b;"></div>
-    </div>
-    <div class="oil-labels">
-      <span class="oil-lbl">Mar14<br>$72</span>
-      <span class="oil-lbl">17<br>$78</span>
-      <span class="oil-lbl">19<br>$85</span>
-      <span class="oil-lbl">21<br>$90</span>
-      <span class="oil-lbl">24<br>$94</span>
-      <span class="oil-lbl">26<br>$99</span>
-      <span class="oil-lbl">28<br>$101</span>
-      <span class="oil-lbl">31<br>$105</span>
-      <span class="oil-lbl">Apr1<br>$109</span>
-      <span class="oil-lbl">2<br>$112</span>
-    </div>
-    <div class="oil-legend">🟦 Below $100 &nbsp; 🟨 Above $100 — amber zone</div>
-  </div>
+<div class="watch-box">
+  <h4>What to Watch</h4>
+  <ul style="padding-left:20px">
+    <li>April 6: New steel/aluminum/copper tariff rates take effect</li>
+    <li>April (date TBD): Xi-Trump summit — semiconductor/minerals trade deal</li>
+    <li>April 12: Hungary election — potential shift in EU dynamics</li>
+    <li>July 24: 150-day global duty expires — renewal decision pending</li>
+  </ul>
+</div>
 </div>
 
-<!-- TECH -->
-<div class="section">
-  <div class="section-title">💻 Tech</div>
-  <div class="story">
-    <div class="story-headline">Google Launches Gemma 4 Open Models</div>
-    <div class="story-body">Google released Gemma 4, a new series of open-weight AI models under Apache 2.0, calling them "byte for byte the most capable open models in the world." They run across phones, laptops, and desktops — intensifying the open-source AI race with Meta and Mistral.</div>
-    <div class="story-source">Source: TechCrunch</div>
-  </div>
-  <div class="story">
-    <div class="story-headline">Cisco Unveils Zero Trust Framework for AI Agents</div>
-    <div class="story-body">Cisco announced a new Zero Trust security architecture for autonomous AI agents and multi-agent systems, featuring real-time policy enforcement and anomaly detection — addressing growing enterprise AI security concerns.</div>
-    <div class="story-source">Source: CNBC</div>
-  </div>
-  <div class="story">
-    <div class="story-headline">Google Warns Quantum Computers May Break Encryption Sooner</div>
-    <div class="story-body">Google researchers published findings suggesting quantum computers could break elliptic-curve cryptography keys faster than projected, accelerating urgency around post-quantum cryptography migration.</div>
-    <div class="story-source">Source: ScienceDaily</div>
-  </div>
-</div>
-
-<!-- POLITICS — WORLD -->
-<div class="section">
-  <div class="section-title">🌍 Politics — World</div>
-  <div class="story">
-    <div class="story-headline">Trump Fires Attorney General Pam Bondi</div>
-    <div class="story-body">President Trump reportedly fired AG Pam Bondi in a dramatic Justice Department shake-up. EPA Director Lee Zeldin is being considered as replacement, signaling a further rightward shift in legal strategy.</div>
-    <div class="story-source">Source: Fox News</div>
-  </div>
-  <div class="story">
-    <div class="story-headline">Hegseth Ousts Army Chief of Staff</div>
-    <div class="story-body">Defense Secretary Hegseth removed Army Chief of Staff Gen. Randy George, wanting leadership aligned with Trump's vision for the Army. The move continues a pattern of military leadership changes.</div>
-    <div class="story-source">Source: CBS News</div>
-  </div>
-  <div class="story">
-    <div class="story-headline">Senate Passes DHS Funding Bill as Shutdown Nears End</div>
-    <div class="story-body">The Senate passed a bipartisan bill funding most of DHS (excluding ICE/Border Patrol), potentially ending the 48-day partial government shutdown. The House is expected to take it up shortly.</div>
-    <div class="story-source">Source: Fox News</div>
-  </div>
-  <div class="story">
-    <div class="story-headline">Democrats Sue Over Trump Mail-In Voting Decree</div>
-    <div class="story-body">Democratic lawmakers filed suit challenging Trump's executive decree restricting mail-in voting. The case could reach the Supreme Court with major implications for the 2026 midterms.</div>
-    <div class="story-source">Source: Handelsblatt</div>
-  </div>
-</div>
-
-<!-- POLITICS — AUSTRIA -->
-<div class="section">
-  <div class="section-title">🇦🇹 Politics — Austria</div>
-  <div class="story">
-    <div class="story-headline">Fuel Price Brake Takes Effect</div>
-    <div class="story-body">Austria's Spritpreisbremse went live on April 2, cutting fuel prices by 10 cents/litre — split between a 5-cent tax cut and a 5-cent mandatory company price reduction. Aimed at cushioning consumers against the Middle East-driven oil spike.</div>
-    <div class="story-source">Source: The Local Austria</div>
-  </div>
-  <div class="story">
-    <div class="story-headline">FPÖ's Parliamentary Question Blitz Costs Millions</div>
-    <div class="story-body">The FPÖ is submitting ~14 parliamentary questions per day, each costing ~€3,000 to answer. Of 894 questions since Oct 2024, 765 came from FPÖ — critics call it deliberate bureaucratic obstruction.</div>
-    <div class="story-source">Source: The Local Austria</div>
-  </div>
-  <div class="story">
-    <div class="story-headline">Security Rules Rushed Before Eurovision in Vienna</div>
-    <div class="story-body">Austria is fast-tracking new private security staff regulations ahead of Eurovision, after discovering a terror suspect linked to the 2024 foiled Taylor Swift concert plot had worked in security.</div>
-    <div class="story-source">Source: The Local Austria</div>
-  </div>
-</div>
-
-<!-- STOCK MARKET -->
-<div class="section">
-  <div class="section-title">📈 Stock Market</div>
-  <div class="story">
-    <div class="story-headline">Oil Surge Dominates Volatile Session</div>
-    <div class="story-body">S&P 500 +0.11% (6,582) · NASDAQ +0.18% (21,879) · Dow -0.13% (46,505) · DAX -1.39% (22,975). Brent crude hit $111.69/bbl — highest since 2008 — after Trump warned of escalated Iran attacks. Stocks recovered on Iran-Oman tanker toll reports.</div>
-    <div class="story-source">Source: CNBC</div>
-  </div>
-  <div class="story">
-    <div class="story-headline">Lufthansa Announces Crisis Program as Kerosene Soars</div>
-    <div class="story-body">Lufthansa CEO Spohr announced a two-stage crisis program internally, warning that ticket prices will need to rise as kerosene becomes scarce and expensive amid the oil price surge.</div>
-    <div class="story-source">Source: Handelsblatt</div>
-  </div>
-  <div class="story">
-    <div class="story-headline">New Weight-Loss Pill Enters Market, LLY Drops 2%</div>
-    <div class="story-body">A new oral weight-loss medication hit the market. Eli Lilly dropped 1.98% as investors assessed the competitive threat to its GLP-1 franchise. Lilly reports earnings April 30.</div>
-    <div class="story-source">Source: Fox News / Yahoo Finance</div>
-  </div>
-</div>
-
-<!-- GEOPOLITICS -->
-<div class="section">
-  <div class="section-title">🌐 Geopolitics</div>
-  <div class="story">
-    <div class="story-headline">US Strikes Destroy Iran's Tallest Bridge</div>
-    <div class="story-body">Iran's B1 highway bridge — linking Tehran to Karaj and the tallest in the Middle East — collapsed after US airstrikes. Iran threatened retaliation against bridges in allied nations. Casualties so far: 1,937 in Iran, 24 in Israel, 13 US soldiers, 27 in Gulf states.</div>
-    <div class="story-source">Source: Fox News / Al Jazeera</div>
-  </div>
-  <div class="story">
-    <div class="story-headline">Pakistan & China Propose Five-Point Peace Plan</div>
-    <div class="story-body">A joint proposal calls for an immediate ceasefire, relaunched peace talks, civilian infrastructure protection, secure Strait of Hormuz shipping, and a UN-based peace framework. Gains significance ahead of the delayed Trump-Xi summit in May.</div>
-    <div class="story-source">Source: NPR / Al Jazeera</div>
-  </div>
-  <div class="story">
-    <div class="story-headline">Hang Seng Falls as Oil Spike Hits Asian Markets</div>
-    <div class="story-body">Hong Kong's Hang Seng fell 0.7% to 25,116. Analysts warn that if the conflict extends beyond mid-April, a fundamental repricing of risk will be necessary across global markets.</div>
-    <div class="story-source">Source: Meyka / Geopolitical Monitor</div>
-  </div>
-</div>
-
-<!-- WATCHLIST -->
-<div class="section">
-  <div class="section-title">📊 Watchlist</div>
-  <div class="wl-card green-border">
-    <div class="wl-info"><div class="wl-ticker">NVDA</div><div class="wl-name">NVIDIA</div></div>
-    <div class="wl-right"><div class="wl-price">$177.39</div><div class="wl-change green-text">▲ +0.93%</div></div>
-  </div>
-  <div class="wl-note" style="margin:-2px 0 6px 17px;">Google Gemma 4 release stirs AI competition</div>
-
-  <div class="wl-card green-border">
-    <div class="wl-info"><div class="wl-ticker">WMT</div><div class="wl-name">Walmart</div></div>
-    <div class="wl-right"><div class="wl-price">$125.54</div><div class="wl-change green-text">▲ +0.23%</div></div>
-  </div>
-
-  <div class="wl-card red-border">
-    <div class="wl-info"><div class="wl-ticker">LLY ⚠️</div><div class="wl-name">Eli Lilly</div></div>
-    <div class="wl-right"><div class="wl-price">$935.58</div><div class="wl-change red-text">▼ -1.98%</div></div>
-  </div>
-  <div class="wl-note" style="margin:-2px 0 6px 17px;">New weight-loss pill competitor hits market</div>
-
-  <div class="wl-card green-border">
-    <div class="wl-info"><div class="wl-ticker">MSFT</div><div class="wl-name">Microsoft</div></div>
-    <div class="wl-right"><div class="wl-price">$373.46</div><div class="wl-change green-text">▲ +0.07%</div></div>
-  </div>
-
-  <div class="wl-card green-border">
-    <div class="wl-info"><div class="wl-ticker">MPWR</div><div class="wl-name">Monolithic Power</div></div>
-    <div class="wl-right"><div class="wl-price">$1,073.90</div><div class="wl-change green-text">▲ +0.45%</div></div>
-  </div>
-  <div class="wl-note" style="margin:-2px 0 6px 17px;">AI power demand tailwinds continue</div>
-
-  <div class="wl-card red-border">
-    <div class="wl-info"><div class="wl-ticker">A0RPWJ</div><div class="wl-name">iShares MSCI EM</div></div>
-    <div class="wl-right"><div class="wl-price">$55.29</div><div class="wl-change red-text">▼ -0.70%</div></div>
-  </div>
-  <div class="wl-note" style="margin:-2px 0 6px 17px;">EM under pressure from strong USD & oil spike</div>
-
-  <div class="wl-card green-border">
-    <div class="wl-info"><div class="wl-ticker">ETF146</div><div class="wl-name">Amundi MSCI World</div></div>
-    <div class="wl-right"><div class="wl-price">€138.54</div><div class="wl-change green-text">▲ +1.12%</div></div>
-  </div>
-
-  <div style="color:#9ca3af;font-size:11px;margin-top:6px;">⚠️ = notable mover (>2% change). LLY flagged: new weight-loss pill competition.</div>
-</div>
-
-<!-- WORTH WATCHING -->
-<div class="ww">
-  <div class="ww-label">👁 Worth Watching</div>
-  <div class="ww-headline">Trump-Xi Summit Delayed to May</div>
-  <div class="ww-body">The long-awaited Trump-Xi meeting has been pushed to May. With the Iran conflict, trade tensions, and the Pakistan-China peace proposal all on the agenda, this could be the most consequential bilateral summit of 2026. Markets are pricing in a short conflict — any signal from Xi could shift that calculus dramatically.</div>
-</div>
-
-<!-- Footer -->
 <div class="footer">
-  Sources: Handelsblatt · Reuters · CNBC · Fox News · CBS News · The Local Austria · Al Jazeera · Yahoo Finance · TechCrunch · Meyka<br>
-  Prices as of market close April 2, 2026. ETF prices may reflect prior session.<br>
-  Auto-generated morning briefing.
+  Generated April 3, 2026 &bull; Sources: CNBC, Reuters, Yahoo Finance, TechRepublic, The Local AT, Al Jazeera, Tax Foundation
 </div>
 
 <script>
-function showTab(n) {
-  document.querySelectorAll('.tab-panel').forEach((p, i) => p.classList.toggle('active', i === n));
-  document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', i === n));
+function showTab(id) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
 }
 </script>
 </body>
