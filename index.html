@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Morning Briefing — April 4, 2026</title>
+<title>Morning Briefing — April 04, 2026</title>
 <style>
   :root {
     --bg: #0f1117; --card: #1a1d27; --text: #e2e8f0; --muted: #94a3b8;
@@ -16,8 +16,6 @@
   .header h1 { font-size: 24px; font-weight: 700; letter-spacing: -0.5px; }
   .header p { color: var(--muted); font-size: 13px; margin-top: 4px; }
   .container { max-width: 900px; margin: 0 auto; padding: 0 16px; }
-
-  /* Tabs */
   .tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--border); padding-top: 12px; overflow-x: auto; }
   .tabs input[type="radio"] { display: none; }
   .tabs label { padding: 10px 14px; font-size: 13px; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; white-space: nowrap; transition: all 0.2s; }
@@ -31,13 +29,9 @@
   #tab-markets:checked ~ .tabs label[for="tab-markets"],
   #tab-watchlist:checked ~ .tabs label[for="tab-watchlist"],
   #tab-spotlight:checked ~ .tabs label[for="tab-spotlight"] { color: var(--text); border-bottom-color: var(--accent); font-weight: 600; background: var(--card); border-radius: 8px 8px 0 0; }
-
-  /* Cards */
   .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 16px; }
   .card h3 { font-size: 17px; margin-bottom: 12px; }
   .card p { color: var(--muted); font-size: 14px; margin-bottom: 10px; }
-
-  /* Market Ribbon */
   .ribbon { display: flex; gap: 10px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 4px; }
   .ribbon-item { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; flex: 1 0 120px; min-width: 120px; }
   .ribbon-item .label { font-size: 11px; color: var(--muted); }
@@ -45,8 +39,6 @@
   .badge { font-size: 13px; font-weight: 600; padding: 2px 7px; border-radius: 5px; display: inline-block; }
   .badge.up { color: var(--green); background: var(--green-bg); }
   .badge.down { color: var(--red); background: var(--red-bg); }
-
-  /* Bar Charts */
   .bar-chart { margin: 12px 0; }
   .bar-row { display: flex; align-items: center; margin-bottom: 8px; }
   .bar-label { width: 90px; font-size: 12px; color: var(--muted); flex-shrink: 0; }
@@ -55,35 +47,20 @@
   .bar-fill.positive { background: var(--green); color: #fff; }
   .bar-fill.negative { background: var(--red); color: #fff; }
   .bar-value { font-size: 12px; color: var(--muted); width: 55px; text-align: right; flex-shrink: 0; margin-left: 8px; }
-
-  /* Heatmap */
   .heatmap { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; }
   .heat-cell { border-radius: 8px; padding: 12px 10px; text-align: center; }
   .heat-cell .name { font-size: 13px; font-weight: 500; }
   .heat-cell .val { font-size: 15px; font-weight: 700; margin-top: 4px; }
-
-  /* Watchlist Table */
   .watchlist-row { display: flex; justify-content: space-between; align-items: center; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; margin-bottom: 8px; }
   .watchlist-row .ticker { font-weight: 700; font-size: 15px; }
   .watchlist-row .name { color: var(--muted); font-size: 13px; margin-left: 8px; }
   .watchlist-row .right { display: flex; align-items: center; gap: 14px; }
   .watchlist-row .price { font-weight: 600; font-size: 15px; }
-
-  /* Spotlight */
   .spotlight-stat { text-align: center; }
   .spotlight-stat .num { font-size: 22px; font-weight: 700; }
   .spotlight-stat .lab { font-size: 12px; color: var(--muted); margin-top: 2px; }
   .stat-grid { display: flex; justify-content: space-around; flex-wrap: wrap; gap: 12px; margin-top: 20px; }
-
-  /* Recovery chart CSS */
-  .recovery-chart { display: flex; align-items: flex-end; gap: 4px; height: 180px; margin: 16px 0; padding: 0 4px; }
-  .recovery-bar { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; position: relative; }
-  .recovery-bar .fill { width: 100%; border-radius: 4px 4px 0 0; transition: height 0.5s ease; min-height: 2px; }
-  .recovery-bar .lbl { font-size: 10px; color: var(--muted); margin-top: 6px; white-space: nowrap; }
-  .recovery-bar .val { font-size: 11px; font-weight: 600; margin-bottom: 4px; }
-
   footer { text-align: center; padding: 16px; color: var(--muted); font-size: 12px; border-top: 1px solid var(--border); }
-
   @media (max-width: 600px) {
     .header h1 { font-size: 20px; }
     .ribbon { gap: 8px; }
@@ -99,7 +76,7 @@
 <div class="header">
   <div class="container">
     <h1>Good Morning, Caroline</h1>
-    <p>Saturday, April 4, 2026 · Markets closed (Good Friday weekend) · Last trading: April 2</p>
+    <p>Saturday, April 04, 2026 &middot; Markets closed (weekend) · Last trading data shown</p>
   </div>
 </div>
 
@@ -110,152 +87,130 @@
   <input type="radio" name="tabs" id="tab-spotlight">
 
   <div class="tabs">
-    <label for="tab-digest">📰 Digest</label>
-    <label for="tab-markets">📊 Markets</label>
-    <label for="tab-watchlist">👁 Watchlist</label>
-    <label for="tab-spotlight">🔦 Spotlight</label>
+    <label for="tab-digest">Digest</label>
+    <label for="tab-markets">Markets</label>
+    <label for="tab-watchlist">Watchlist</label>
+    <label for="tab-spotlight">Spotlight</label>
   </div>
 
-  <!-- ═══════ DIGEST ═══════ -->
   <div class="tab-content digest-content">
     <div class="ribbon">
       <div class="ribbon-item"><div class="label">S&P 500</div><div class="value">6,582.69</div><span class="badge up">▲ 0.11%</span></div>
-      <div class="ribbon-item"><div class="label">NASDAQ</div><div class="value">21,879.18</div><span class="badge up">▲ 0.18%</span></div>
-      <div class="ribbon-item"><div class="label">Dow Jones</div><div class="value">46,504.67</div><span class="badge down">▼ 0.13%</span></div>
-      <div class="ribbon-item"><div class="label">DAX</div><div class="value">23,168.08</div><span class="badge down">▼ 0.56%</span></div>
+<div class="ribbon-item"><div class="label">NASDAQ</div><div class="value">21,879.18</div><span class="badge up">▲ 0.18%</span></div>
+<div class="ribbon-item"><div class="label">Dow Jones</div><div class="value">46,504.67</div><span class="badge down">▼ 0.13%</span></div>
+<div class="ribbon-item"><div class="label">DAX</div><div class="value">23,168.08</div><span class="badge down">▼ 0.56%</span></div>
+
     </div>
 
     <div class="card">
-      <h3>🤖 Tech & AI</h3>
-      <p>Three frontier AI models launched in early April: GPT-5.4 (Standard, Thinking, Pro variants), Gemini 3.1 Ultra with native multimodal reasoning, and Grok 4.20 with enhanced real-time web access. GPT-5.4's "Thinking" variant surpassed human-level performance on the OSWorld-Verified benchmark at 75.0% — a 27.7pp jump over GPT-5.2.</p>
-      <p>The AI industry continues pivoting toward agentic systems that execute complex, multi-step workflows rather than just conversing. Meta announced deployment of its MTIA chips across data centers to reduce NVIDIA reliance; the MTIA 400 is currently in testing with competitive performance claims.</p>
-      <p>Anthropic announced Claude subscriptions will no longer cover third-party tool usage starting April 4. AGS Health is preparing a $3B IPO backed by AI-driven medical coding technologies.</p>
+      <h3>Tech &amp; AI</h3>
+      <p>Artificial intelligence adoption continues to accelerate despite mounting legal and ethical concerns. Early adoption by law firms has resulted in rising court sanctions over AI-generated fake legal briefs, yet lawyers show no signs of slowing their adoption of these tools. The pattern suggests that competitive pressures and efficiency gains are outweighing regulatory risks and professional consequences in the legal sector. Beyond the courtroom, AI's environmental footprint is becoming impossible to ignore. Data centers powering AI systems consume massive amounts of water and energy, while simultaneously spreading climate misinformation across the internet, creating a paradoxical situation where the technology fueling the boom is undermining climate action.</p>
     </div>
 
     <div class="card">
-      <h3>🌍 World Politics</h3>
-      <p>Europe watches Hungary's April 12 election — under Orbán, Hungary has blocked EU asylum policy, defense mechanisms, energy autonomy, and Ukraine's EU membership talks plus €90B in loans. The European Parliament adopted positions on EU-US Turnberry trade deal tariffs and agreed on a major EU Customs Code reform.</p>
-      <p>The Liberation Day tariffs anniversary dominates US discourse: one year after Trump's sweeping April 2, 2025 tariffs, the S&P 500 is up 16% but MSCI USA has underperformed the global index. The Supreme Court ruled the tariff regime unconstitutional, with the government potentially owing billions in refunds from $166B collected.</p>
-      <p>In France, police detained EU Parliament member Rima Hassan on suspicion of "apology for terrorism." Trump continues criticizing NATO; European nations accelerate independent defense coordination.</p>
+      <h3>World Politics</h3>
+      <p>President Trump is facing a challenging week with mounting political pressure from multiple fronts, particularly regarding his handling of ongoing conflict and its economic consequences. Rising gas prices and war-related disruptions are taking a toll on his administration's economic narrative and domestic political standing. Meanwhile, in Hungary, voters will head to the polls in nine days with the potential to unseat Prime Minister Viktor Orban after his 16 years in continuous power, marking a significant moment for European politics.</p>
     </div>
 
     <div class="card">
-      <h3>🇦🇹 Austria Politics</h3>
-      <p>Austria's fuel-price brake (Spritpreisbremse) took effect April 2, cutting fuel prices by 10 cents/litre. The FPÖ opposition continues straining government resources with ~14 parliamentary questions per day at ~€3,000 each.</p>
-      <p>Austria must implement the EU Pay Transparency Directive by June 2026, requiring clearer salary information. The coalition plans to expand the Red-White-Red Card for labour migration, including easier access for non-EU apprentices.</p>
+      <h3>Austria</h3>
+      <p>No Austrian-specific news was reported in today's briefing. However, Austria remains attentive to broader European political developments, particularly Hungary's upcoming election on April 13, which could reshape Central European politics. As an EU member, Austria's diplomatic and economic interests are closely tied to the outcome of these regional political shifts.</p>
     </div>
 
     <div class="card">
-      <h3>📈 Stock Market</h3>
-      <p>Markets closed for Good Friday (April 3) through the weekend. Last session (April 2): S&P 500 at 6,582.69 (+0.11%), NASDAQ at 21,879.18 (+0.18%), Dow at 46,504.67 (−0.13%), DAX at 23,168.08 (−0.56%). Weekly performance was strong: NASDAQ +4.4%, S&P +3.4%, Dow +3%.</p>
-      <p>US economy added 178K nonfarm payroll jobs in March, beating expectations. Erste Group upgraded Walmart to "Strong-Buy." International markets outperforming US: MSCI ACWI +18% vs MSCI USA +14% since Liberation Day.</p>
+      <h3>Stock Market</h3>
+      <p>Major U.S. indices ended the week mixed, with the S&P 500 and NASDAQ down slightly on a weekly basis despite modest daily gains. The S&P 500 closed at 6,582.69 (up 0.11% today), while NASDAQ reached 21,879.18 (up 0.18%), though both indices declined 0.14% and 0.23% respectively over the full week. The Dow Jones bucked the trend with a weekly gain of 0.16%, closing today at 46,504.67. Technology stocks led daily gainers with an 0.8% sector rise, driven by strength in NVIDIA (up 0.93% to $177.39) and Microsoft (up 1.11% to $373.46), while Consumer stocks suffered the most significant losses, declining 1.5% as broader economic uncertainty persists. Deutsche Bank's addition of 21 stocks to its 'fresh money' list highlights selective opportunities, with the basket historically outperforming the S&P 500 by 32 percentage points since inception.</p>
     </div>
 
     <div class="card">
-      <h3>🌐 Geopolitics</h3>
-      <p>Strait of Hormuz tensions remain elevated amid the 2026 Iran conflict, disrupting critical oil routes. India has emerged as a key diplomatic voice. An anticipated Xi-Trump summit in April may produce a trade arrangement leveraging US semiconductor strength against China's rare earth control.</p>
-      <p>Multiple flashpoints remain active: potential Lebanon civil war, Israel-Lebanon tensions, Iraq fighting, Yemen escalation, and possible second Iran-Israel confrontation. The global order continues fragmenting along a bipolar US-China axis.</p>
+      <h3>Geopolitics</h3>
+      <p>Regional tensions in the Middle East are intensifying as Yemen's Houthi group claimed a joint ballistic missile barrage on Israel's Jaffa area, signaling a widening conflict involving allied forces. The group has indicated that military operations will continue and potentially intensify based on future developments, raising concerns about broader regional escalation. In broader great power dynamics, geopolitical analyst commentary suggests Iran may have successfully broken the asymmetric cost model that has traditionally underpinned American military supremacy, while Iranian leaders are sharply criticizing Trump's recent threats, questioning the wisdom of further escalation. A humanitarian search and rescue operation is currently underway in Iran for a missing U.S. crew member, adding an urgent humanitarian dimension to the tense geopolitical climate.</p>
     </div>
   </div>
 
-  <!-- ═══════ MARKETS ═══════ -->
   <div class="tab-content markets-content">
     <div class="card">
-      <h3>📊 Major Indices (April 2 Close)</h3>
+      <h3>Daily Index Performance</h3>
       <div class="bar-chart">
-        <div class="bar-row"><span class="bar-label">S&P 500</span><div class="bar-track"><div class="bar-fill positive" style="width: 22%"></div></div><span class="bar-value" style="color:var(--green)">+0.11%</span></div>
-        <div class="bar-row"><span class="bar-label">NASDAQ</span><div class="bar-track"><div class="bar-fill positive" style="width: 36%"></div></div><span class="bar-value" style="color:var(--green)">+0.18%</span></div>
-        <div class="bar-row"><span class="bar-label">Dow Jones</span><div class="bar-track"><div class="bar-fill negative" style="width: 26%"></div></div><span class="bar-value" style="color:var(--red)">−0.13%</span></div>
-        <div class="bar-row"><span class="bar-label">DAX</span><div class="bar-track"><div class="bar-fill negative" style="width: 56%"></div></div><span class="bar-value" style="color:var(--red)">−0.56%</span></div>
+        <div class="bar-row"><span class="bar-label">S&P 500</span><div class="bar-track"><div class="bar-fill positive" style="width:6%"></div></div><span class="bar-value" style="color:var(--green)">+0.11%</span></div>
+<div class="bar-row"><span class="bar-label">NASDAQ</span><div class="bar-track"><div class="bar-fill positive" style="width:9%"></div></div><span class="bar-value" style="color:var(--green)">+0.18%</span></div>
+<div class="bar-row"><span class="bar-label">Dow Jones</span><div class="bar-track"><div class="bar-fill negative" style="width:6%"></div></div><span class="bar-value" style="color:var(--red)">-0.13%</span></div>
+<div class="bar-row"><span class="bar-label">DAX</span><div class="bar-track"><div class="bar-fill negative" style="width:28%"></div></div><span class="bar-value" style="color:var(--red)">-0.56%</span></div>
+
       </div>
     </div>
-
     <div class="card">
-      <h3>📅 Weekly Performance</h3>
+      <h3>Weekly Performance</h3>
       <div class="bar-chart">
-        <div class="bar-row"><span class="bar-label">NASDAQ</span><div class="bar-track"><div class="bar-fill positive" style="width: 88%">+4.4%</div></div><span class="bar-value" style="color:var(--green)">+4.40%</span></div>
-        <div class="bar-row"><span class="bar-label">S&P 500</span><div class="bar-track"><div class="bar-fill positive" style="width: 68%">+3.4%</div></div><span class="bar-value" style="color:var(--green)">+3.40%</span></div>
-        <div class="bar-row"><span class="bar-label">Dow Jones</span><div class="bar-track"><div class="bar-fill positive" style="width: 60%">+3.0%</div></div><span class="bar-value" style="color:var(--green)">+3.00%</span></div>
-        <div class="bar-row"><span class="bar-label">DAX</span><div class="bar-track"><div class="bar-fill negative" style="width: 16%"></div></div><span class="bar-value" style="color:var(--red)">−0.80%</span></div>
+        <div class="bar-row"><span class="bar-label">S&P 500</span><div class="bar-track"><div class="bar-fill negative" style="width:14%"></div></div><span class="bar-value" style="color:var(--red)">-0.14%</span></div>
+<div class="bar-row"><span class="bar-label">NASDAQ</span><div class="bar-track"><div class="bar-fill negative" style="width:22%">-0.2%</div></div><span class="bar-value" style="color:var(--red)">-0.23%</span></div>
+<div class="bar-row"><span class="bar-label">Dow Jones</span><div class="bar-track"><div class="bar-fill positive" style="width:16%"></div></div><span class="bar-value" style="color:var(--green)">+0.16%</span></div>
+<div class="bar-row"><span class="bar-label">DAX</span><div class="bar-track"><div class="bar-fill positive" style="width:90%">+0.9%</div></div><span class="bar-value" style="color:var(--green)">+0.92%</span></div>
+
       </div>
     </div>
-
     <div class="card">
-      <h3>🏭 Sector Heatmap</h3>
+      <h3>Sector Heatmap</h3>
       <div class="heatmap">
-        <div class="heat-cell" style="background:rgba(34,197,94,0.22)"><div class="name">Technology</div><div class="val" style="color:var(--green)">+0.45%</div></div>
-        <div class="heat-cell" style="background:rgba(239,68,68,0.38)"><div class="name">Healthcare</div><div class="val" style="color:var(--red)">−1.20%</div></div>
-        <div class="heat-cell" style="background:rgba(34,197,94,0.18)"><div class="name">Financials</div><div class="val" style="color:var(--green)">+0.32%</div></div>
-        <div class="heat-cell" style="background:rgba(239,68,68,0.28)"><div class="name">Energy</div><div class="val" style="color:var(--red)">−0.78%</div></div>
-        <div class="heat-cell" style="background:rgba(34,197,94,0.24)"><div class="name">Consumer</div><div class="val" style="color:var(--green)">+0.58%</div></div>
-        <div class="heat-cell" style="background:rgba(239,68,68,0.14)"><div class="name">Industrial</div><div class="val" style="color:var(--red)">−0.15%</div></div>
-        <div class="heat-cell" style="background:rgba(239,68,68,0.20)"><div class="name">Materials</div><div class="val" style="color:var(--red)">−0.42%</div></div>
-        <div class="heat-cell" style="background:rgba(34,197,94,0.15)"><div class="name">Utilities</div><div class="val" style="color:var(--green)">+0.21%</div></div>
-        <div class="heat-cell" style="background:rgba(239,68,68,0.17)"><div class="name">Real Estate</div><div class="val" style="color:var(--red)">−0.33%</div></div>
-        <div class="heat-cell" style="background:rgba(34,197,94,0.13)"><div class="name">Telecom</div><div class="val" style="color:var(--green)">+0.12%</div></div>
+        <div class="heat-cell" style="background:rgba(34,197,94,0.23)"><div class="name">Technology</div><div class="val" style="color:var(--green)">+0.8%</div></div>
+<div class="heat-cell" style="background:rgba(239,68,68,0.20)"><div class="name">Healthcare</div><div class="val" style="color:var(--red)">-0.6%</div></div>
+<div class="heat-cell" style="background:rgba(34,197,94,0.14)"><div class="name">Financials</div><div class="val" style="color:var(--green)">+0.2%</div></div>
+<div class="heat-cell" style="background:rgba(34,197,94,0.18)"><div class="name">Energy</div><div class="val" style="color:var(--green)">+0.5%</div></div>
+<div class="heat-cell" style="background:rgba(239,68,68,0.32)"><div class="name">Consumer</div><div class="val" style="color:var(--red)">-1.5%</div></div>
+<div class="heat-cell" style="background:rgba(239,68,68,0.17)"><div class="name">Industrial</div><div class="val" style="color:var(--red)">-0.4%</div></div>
+<div class="heat-cell" style="background:rgba(239,68,68,0.13)"><div class="name">Materials</div><div class="val" style="color:var(--red)">-0.1%</div></div>
+<div class="heat-cell" style="background:rgba(34,197,94,0.19)"><div class="name">Utilities</div><div class="val" style="color:var(--green)">+0.5%</div></div>
+<div class="heat-cell" style="background:rgba(34,197,94,0.33)"><div class="name">Real Estate</div><div class="val" style="color:var(--green)">+1.6%</div></div>
+<div class="heat-cell" style="background:rgba(34,197,94,0.17)"><div class="name">Telecom</div><div class="val" style="color:var(--green)">+0.4%</div></div>
+
       </div>
     </div>
   </div>
 
-  <!-- ═══════ WATCHLIST ═══════ -->
   <div class="tab-content watchlist-content">
     <div class="card">
-      <h3>👁 Your Watchlist (April 2 Close)</h3>
-      <div class="watchlist-row"><div><span class="ticker">NVDA</span><span class="name">NVIDIA</span></div><div class="right"><span class="price">$176.70</span><span class="badge down">▼ 0.44%</span></div></div>
-      <div class="watchlist-row"><div><span class="ticker">WMT</span><span class="name">Walmart</span></div><div class="right"><span class="price">$125.46</span><span class="badge up">▲ 0.58%</span></div></div>
-      <div class="watchlist-row"><div><span class="ticker">LLY</span><span class="name">Eli Lilly</span></div><div class="right"><span class="price">$935.58</span><span class="badge down">▼ 1.98%</span></div></div>
-      <div class="watchlist-row"><div><span class="ticker">MSFT</span><span class="name">Microsoft</span></div><div class="right"><span class="price">$373.40</span><span class="badge up">▲ 0.25%</span></div></div>
-      <div class="watchlist-row"><div><span class="ticker">MPWR</span><span class="name">Monolithic Power</span></div><div class="right"><span class="price">$1,118.49</span><span class="badge down">▼ 0.49%</span></div></div>
-      <div class="watchlist-row"><div><span class="ticker">A0RPWJ</span><span class="name">iShares MSCI EM</span></div><div class="right"><span class="price">$56.59</span><span class="badge down">▼ 1.12%</span></div></div>
-      <div class="watchlist-row"><div><span class="ticker">ETF146</span><span class="name">Amundi MSCI World</span></div><div class="right"><span class="price">€586.26</span><span class="badge down">▼ 0.38%</span></div></div>
-    </div>
+      <h3>Your Watchlist</h3>
+      <div class="watchlist-row"><div><span class="ticker">NVDA</span><span class="name">NVIDIA</span></div><div class="right"><span class="price">$177.39</span><span class="badge up">▲ 0.93%</span></div></div>
+<div class="watchlist-row"><div><span class="ticker">WMT</span><span class="name">Walmart</span></div><div class="right"><span class="price">$125.79</span><span class="badge up">▲ 0.84%</span></div></div>
+<div class="watchlist-row"><div><span class="ticker">LLY</span><span class="name">Eli Lilly</span></div><div class="right"><span class="price">$935.58</span><span class="badge down">▼ 1.98%</span></div></div>
+<div class="watchlist-row"><div><span class="ticker">MSFT</span><span class="name">Microsoft</span></div><div class="right"><span class="price">$373.46</span><span class="badge up">▲ 1.11%</span></div></div>
+<div class="watchlist-row"><div><span class="ticker">MPWR</span><span class="name">Monolithic Power</span></div><div class="right"><span class="price">$1,118.49</span><span class="badge down">▼ 0.09%</span></div></div>
+<div class="watchlist-row"><div><span class="ticker">A0RPWJ</span><span class="name">iShares MSCI EM</span></div><div class="right"><span class="price">€46.28</span><span class="badge down">▼ 1.82%</span></div></div>
+<div class="watchlist-row"><div><span class="ticker">ETF146</span><span class="name">Amundi MSCI World</span></div><div class="right"><span class="price">€0.00</span><span class="badge up">▲ 0.00%</span></div></div>
 
+    </div>
     <div class="card">
-      <h3>📊 Watchlist Daily Changes</h3>
+      <h3>Watchlist Daily Changes</h3>
       <div class="bar-chart">
-        <div class="bar-row"><span class="bar-label">WMT</span><div class="bar-track"><div class="bar-fill positive" style="width: 29%">+0.58%</div></div><span class="bar-value" style="color:var(--green)">+0.58%</span></div>
-        <div class="bar-row"><span class="bar-label">MSFT</span><div class="bar-track"><div class="bar-fill positive" style="width: 13%"></div></div><span class="bar-value" style="color:var(--green)">+0.25%</span></div>
-        <div class="bar-row"><span class="bar-label">ETF146</span><div class="bar-track"><div class="bar-fill negative" style="width: 19%"></div></div><span class="bar-value" style="color:var(--red)">−0.38%</span></div>
-        <div class="bar-row"><span class="bar-label">NVDA</span><div class="bar-track"><div class="bar-fill negative" style="width: 22%"></div></div><span class="bar-value" style="color:var(--red)">−0.44%</span></div>
-        <div class="bar-row"><span class="bar-label">MPWR</span><div class="bar-track"><div class="bar-fill negative" style="width: 25%"></div></div><span class="bar-value" style="color:var(--red)">−0.49%</span></div>
-        <div class="bar-row"><span class="bar-label">A0RPWJ</span><div class="bar-track"><div class="bar-fill negative" style="width: 56%"></div></div><span class="bar-value" style="color:var(--red)">−1.12%</span></div>
-        <div class="bar-row"><span class="bar-label">LLY</span><div class="bar-track"><div class="bar-fill negative" style="width: 99%">−1.98%</div></div><span class="bar-value" style="color:var(--red)">−1.98%</span></div>
+        <div class="bar-row"><span class="bar-label">MSFT</span><div class="bar-track"><div class="bar-fill positive" style="width:50%">+1.11%</div></div><span class="bar-value" style="color:var(--green)">+1.11%</span></div>
+<div class="bar-row"><span class="bar-label">NVDA</span><div class="bar-track"><div class="bar-fill positive" style="width:42%">+0.93%</div></div><span class="bar-value" style="color:var(--green)">+0.93%</span></div>
+<div class="bar-row"><span class="bar-label">WMT</span><div class="bar-track"><div class="bar-fill positive" style="width:38%">+0.84%</div></div><span class="bar-value" style="color:var(--green)">+0.84%</span></div>
+<div class="bar-row"><span class="bar-label">ETF146</span><div class="bar-track"><div class="bar-fill positive" style="width:3%"></div></div><span class="bar-value" style="color:var(--green)">+0.00%</span></div>
+<div class="bar-row"><span class="bar-label">MPWR</span><div class="bar-track"><div class="bar-fill negative" style="width:4%"></div></div><span class="bar-value" style="color:var(--red)">-0.09%</span></div>
+<div class="bar-row"><span class="bar-label">A0RPWJ</span><div class="bar-track"><div class="bar-fill negative" style="width:83%">-1.82%</div></div><span class="bar-value" style="color:var(--red)">-1.82%</span></div>
+<div class="bar-row"><span class="bar-label">LLY</span><div class="bar-track"><div class="bar-fill negative" style="width:90%">-1.98%</div></div><span class="bar-value" style="color:var(--red)">-1.98%</span></div>
+
       </div>
     </div>
   </div>
 
-  <!-- ═══════ SPOTLIGHT ═══════ -->
   <div class="tab-content spotlight-content">
     <div class="card">
-      <h3>🔦 Spotlight: Liberation Day — One Year Later</h3>
-      <p style="color:var(--gold); font-style: italic; margin-bottom: 14px;">The biggest market story this week: the anniversary of Trump's sweeping tariffs</p>
-      <p>One year ago on April 2, 2025, President Trump announced "Liberation Day" tariffs — sweeping duties including 34% on China, 20% on the EU, and 46% on Vietnam. The initial shock sent the US stock market plunging 12.4%, the biggest drop since COVID-19. Markets then surged 9.52% in a single day when Trump paused parts of the policy — the largest one-day S&P 500 gain since 2008.</p>
-      <p>Fast forward to today: the S&P 500 is up 16% from Liberation Day, but US stocks have actually underperformed the global index (MSCI ACWI +18% vs MSCI USA +14%). The Supreme Court ruled the tariff regime unconstitutional, and the government may owe billions in refunds from $166 billion collected from 330,000+ businesses.</p>
-      <p>The anniversary has reignited debate about "American exceptionalism" in investing. Global investors are increasingly diversifying away from US-centric portfolios, and the stronger performance of international indices suggests the tariffs may have permanently shifted capital flows.</p>
-    </div>
-
-    <div class="card">
-      <h3>📈 S&P 500: Post-Liberation Day Recovery</h3>
-      <div class="recovery-chart">
-        <div class="recovery-bar"><span class="val" style="color:var(--red)">−12.4%</span><div class="fill" style="height: 2px; background: var(--border);"></div><div style="background:var(--red); width:100%; height: 80px; border-radius: 0 0 4px 4px; margin-top: -1px;"></div><span class="lbl">May '25</span></div>
-        <div class="recovery-bar"><span class="val" style="color:var(--red)">−4.2%</span><div class="fill" style="height: 2px; background: var(--border);"></div><div style="background:var(--red); width:100%; height: 27px; border-radius: 0 0 4px 4px; margin-top: -1px;"></div><span class="lbl">Jun '25</span></div>
-        <div class="recovery-bar"><span class="val" style="color:var(--green)">+2.1%</span><div class="fill" style="height: 14px; background: var(--green); border-radius: 4px 4px 0 0;"></div><span class="lbl">Sep '25</span></div>
-        <div class="recovery-bar"><span class="val" style="color:var(--green)">+8.5%</span><div class="fill" style="height: 55px; background: var(--green); border-radius: 4px 4px 0 0;"></div><span class="lbl">Dec '25</span></div>
-        <div class="recovery-bar"><span class="val" style="color:var(--green)">+14.0%</span><div class="fill" style="height: 91px; background: var(--green); border-radius: 4px 4px 0 0;"></div><span class="lbl">Mar '26</span></div>
-        <div class="recovery-bar"><span class="val" style="color:var(--green)">+16.0%</span><div class="fill" style="height: 104px; background: linear-gradient(to top, var(--green), var(--accent-light)); border-radius: 4px 4px 0 0;"></div><span class="lbl">Apr '26</span></div>
-      </div>
+      <h3>AI's Hidden Environmental Price Tag</h3>
+      <p>While artificial intelligence captures headlines for its transformative potential, the technology is quietly creating a climate crisis that threatens to undermine global environmental goals. Data centers powering AI systems consume staggering quantities of water and electricity, resources that are increasingly scarce in many regions. The environmental damage extends beyond mere resource consumption: AI systems are simultaneously spreading climate misinformation across the internet at unprecedented scale, creating a perverse dynamic where the same technology driving climate damage is actively undermining climate action and public understanding of the crisis. This contradiction has prompted growing scrutiny from climate scientists and environmental advocates questioning whether the economic gains from AI innovation justify its mounting environmental costs.</p>
       <div class="stat-grid">
-        <div class="spotlight-stat"><div class="num" style="color:var(--red)">−12.4%</div><div class="lab">Initial Drop</div></div>
-        <div class="spotlight-stat"><div class="num" style="color:var(--green)">+16.0%</div><div class="lab">1-Year Return</div></div>
-        <div class="spotlight-stat"><div class="num" style="color:var(--accent-light)">+18.0%</div><div class="lab">Global (ACWI)</div></div>
-        <div class="spotlight-stat"><div class="num" style="color:var(--gold)">$166B</div><div class="lab">Tariffs Collected</div></div>
+        <div class="spotlight-stat"><div class="num" style="color:var(--green)">+32 percentage points</div><div class="lab">Deutsche Bank outperformance vs S&P 500</div></div>
+<div class="spotlight-stat"><div class="num" style="color:var(--red)">-0.23%</div><div class="lab">NASDAQ weekly change</div></div>
+<div class="spotlight-stat"><div class="num" style="color:var(--green)">+0.8%</div><div class="lab">Technology sector daily gain</div></div>
+<div class="spotlight-stat"><div class="num" style="color:var(--red)">-1.5%</div><div class="lab">Consumer sector daily loss</div></div>
+
       </div>
     </div>
   </div>
 
 </div>
 
-<footer>Generated April 4, 2026 · Data as of market close April 2 (Good Friday weekend) · Not financial advice</footer>
+<footer>Generated April 04, 2026 &middot; Not financial advice</footer>
 
 </body>
 </html>
