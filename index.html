@@ -347,7 +347,11 @@
       transition: all 0.2s;
     }
 
-    .period-input:checked + .period-label {
+    /* ─── Watchlist period label highlighting ─── */
+    #watch-daily:checked ~ .period-toggle label[for="watch-daily"],
+    #watch-weekly:checked ~ .period-toggle label[for="watch-weekly"],
+    #watch-monthly:checked ~ .period-toggle label[for="watch-monthly"],
+    #watch-threeMonth:checked ~ .period-toggle label[for="watch-threeMonth"] {
       font-weight: 600;
       background: var(--card);
       color: var(--text);
@@ -359,9 +363,10 @@
       display: none;
     }
 
-    .period-input:checked ~ .watchlist-content {
-      display: block;
-    }
+    #watch-daily:checked ~ .wl-daily { display: block; }
+    #watch-weekly:checked ~ .wl-weekly { display: block; }
+    #watch-monthly:checked ~ .wl-monthly { display: block; }
+    #watch-threeMonth:checked ~ .wl-threeMonth { display: block; }
 
     .watchlist-item {
       display: flex;
@@ -743,16 +748,21 @@
   var periods = D.watchlist.periods;
   var periodKeys = ['daily','weekly','monthly','threeMonth'];
   var periodLabels = ['1D','1W','1M','3M'];
-  var wHTML = '<div class="period-toggle">';
+  var wHTML = '';
+  // Radio inputs first (direct children for CSS ~ combinator)
   periodKeys.forEach(function(k, i) {
     var id = 'watch-' + k;
     wHTML += '<input type="radio" id="' + id + '" name="watch-period" class="period-input"' + (i === 0 ? ' checked' : '') + '>';
-    wHTML += '<label for="' + id + '" class="period-label">' + periodLabels[i] + '</label>';
+  });
+  // Label bar inside .period-toggle wrapper
+  wHTML += '<div class="period-toggle">';
+  periodKeys.forEach(function(k, i) {
+    wHTML += '<label for="watch-' + k + '" class="period-label">' + periodLabels[i] + '</label>';
   });
   wHTML += '</div>';
   periodKeys.forEach(function(k) {
     var p = periods[k];
-    wHTML += '<div class="watchlist-content">' + barChart(p.chart, true) + watchlistItems(p.items) + '</div>';
+    wHTML += '<div class="watchlist-content wl-' + k + '">' + barChart(p.chart, true) + watchlistItems(p.items) + '</div>';
   });
   wHTML += '<p class="watchlist-note">' + esc(D.watchlist.note) + '</p>';
   document.getElementById('watchlist-content').innerHTML = wHTML;
