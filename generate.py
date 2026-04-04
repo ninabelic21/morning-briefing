@@ -294,11 +294,11 @@ def generate_html(digest, indices, sectors, watchlist):
     for s in sectors:
         intensity = min(abs(s["change"]) / 3, 1)
         if s["change"] >= 0:
-            bg = f"rgba(34,197,94,{0.12 + intensity * 0.4:.2f})"
+            bg = f"rgba(22,163,74,{0.08 + intensity * 0.25:.2f})"
             color = "var(--green)"
             sign = "+"
         else:
-            bg = f"rgba(239,68,68,{0.12 + intensity * 0.4:.2f})"
+            bg = f"rgba(220,38,38,{0.08 + intensity * 0.25:.2f})"
             color = "var(--red)"
             sign = ""
         heatmap_html += f'<div class="heat-cell" style="background:{bg}"><div class="name">{s["name"]}</div><div class="val" style="color:{color}">{sign}{s["change"]:.1f}%</div></div>\n'
@@ -347,8 +347,8 @@ def generate_html(digest, indices, sectors, watchlist):
     for stat in digest.get("spotlight_stats", []):
         color = {
             "green": "var(--green)", "red": "var(--red)",
-            "gold": "var(--gold)", "accent": "var(--accent-light)"
-        }.get(stat.get("color", "accent"), "var(--accent-light)")
+            "gold": "var(--gold)", "accent": "var(--accent)"
+        }.get(stat.get("color", "accent"), "var(--accent)")
         spotlight_stats_html += f'<div class="spotlight-stat"><div class="num" style="color:{color}">{stat["value"]}</div><div class="lab">{stat["label"]}</div></div>\n'
 
     html = f"""<!DOCTYPE html>
@@ -357,19 +357,22 @@ def generate_html(digest, indices, sectors, watchlist):
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Morning Briefing — {DATE_STR}</title>
-<style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
   :root {{
-    --bg: #0f1117; --card: #1a1d27; --text: #e2e8f0; --muted: #94a3b8;
-    --green: #22c55e; --red: #ef4444; --accent: #6366f1; --accent-light: #818cf8;
-    --border: #2d3148; --gold: #f59e0b; --green-bg: rgba(34,197,94,0.12); --red-bg: rgba(239,68,68,0.12);
+    --bg: #f8f9fc; --card: #ffffff; --text: #1e293b; --muted: #64748b;
+    --green: #16a34a; --red: #dc2626; --accent: #4f46e5; --accent-light: #6366f1;
+    --border: #e2e8f0; --gold: #d97706; --green-bg: rgba(22,163,74,0.08); --red-bg: rgba(220,38,38,0.08); --shadow-sm: 0 1px 2px rgba(0,0,0,0.04); --shadow-md: 0 4px 12px rgba(0,0,0,0.06);
   }}
   * {{ margin: 0; padding: 0; box-sizing: border-box; }}
   body {{ background: var(--bg); color: var(--text); font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.6; }}
-  .header {{ background: linear-gradient(135deg, #1e1b4b, #312e81); padding: 28px 20px 20px; border-bottom: 1px solid var(--border); }}
-  .header h1 {{ font-size: 24px; font-weight: 700; letter-spacing: -0.5px; }}
-  .header p {{ color: var(--muted); font-size: 13px; margin-top: 4px; }}
+  .header {{ background: linear-gradient(135deg, #4f46e5, #7c3aed); padding: 28px 20px 20px; border-bottom: 1px solid var(--border); }}
+  .header h1 {{ font-size: 24px; font-weight: 700; letter-spacing: -0.5px; color: #ffffff; }}
+  .header p {{ color: rgba(255,255,255,0.75); font-size: 13px; margin-top: 4px; }}
   .container {{ max-width: 900px; margin: 0 auto; padding: 0 16px; }}
-  .tabs {{ display: flex; gap: 4px; border-bottom: 1px solid var(--border); padding-top: 12px; overflow-x: auto; }}
+  .tabs {{ display: flex; gap: 4px; border-bottom: 1px solid var(--border); padding-top: 12px; overflow-x: auto; background: var(--card); }}
   .tabs input[type="radio"] {{ display: none; }}
   .tabs label {{ padding: 10px 14px; font-size: 13px; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; white-space: nowrap; transition: all 0.2s; }}
   .tabs label:hover {{ color: var(--text); }}
@@ -381,13 +384,13 @@ def generate_html(digest, indices, sectors, watchlist):
   #tab-digest:checked ~ .tabs label[for="tab-digest"],
   #tab-markets:checked ~ .tabs label[for="tab-markets"],
   #tab-watchlist:checked ~ .tabs label[for="tab-watchlist"],
-  #tab-spotlight:checked ~ .tabs label[for="tab-spotlight"] {{ color: var(--text); border-bottom-color: var(--accent); font-weight: 600; background: var(--card); border-radius: 8px 8px 0 0; }}
-  .card {{ background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 16px; }}
+  #tab-spotlight:checked ~ .tabs label[for="tab-spotlight"] {{ color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }}
+  .card {{ background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: var(--shadow-sm); }}
   .card h3 {{ font-size: 17px; margin-bottom: 12px; }}
   .card p {{ color: var(--muted); font-size: 14px; margin-bottom: 10px; }}
   .ribbon {{ display: flex; gap: 10px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 4px; }}
-  .ribbon-item {{ background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; flex: 1 0 120px; min-width: 120px; }}
-  .ribbon-item .label {{ font-size: 11px; color: var(--muted); }}
+  .ribbon-item {{ background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; flex: 1 0 120px; min-width: 120px; box-shadow: var(--shadow-sm); }}
+  .ribbon-item .label {{ font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }}
   .ribbon-item .value {{ font-size: 15px; font-weight: 600; margin: 2px 0; }}
   .badge {{ font-size: 13px; font-weight: 600; padding: 2px 7px; border-radius: 5px; display: inline-block; }}
   .badge.up {{ color: var(--green); background: var(--green-bg); }}
@@ -395,13 +398,13 @@ def generate_html(digest, indices, sectors, watchlist):
   .bar-chart {{ margin: 12px 0; }}
   .bar-row {{ display: flex; align-items: center; margin-bottom: 8px; }}
   .bar-label {{ width: 90px; font-size: 12px; color: var(--muted); flex-shrink: 0; }}
-  .bar-track {{ flex: 1; height: 24px; background: rgba(255,255,255,0.04); border-radius: 4px; position: relative; overflow: hidden; }}
-  .bar-fill {{ height: 100%; border-radius: 4px; display: flex; align-items: center; padding: 0 8px; font-size: 11px; font-weight: 600; min-width: 40px; transition: width 0.6s ease; }}
+  .bar-track {{ flex: 1; height: 24px; background: #f1f5f9; border-radius: 6px; position: relative; overflow: hidden; }}
+  .bar-fill {{ height: 100%; border-radius: 6px; display: flex; align-items: center; padding: 0 8px; font-size: 11px; font-weight: 600; min-width: 40px; transition: width 0.6s ease; }}
   .bar-fill.positive {{ background: var(--green); color: #fff; }}
   .bar-fill.negative {{ background: var(--red); color: #fff; }}
   .bar-value {{ font-size: 12px; color: var(--muted); width: 55px; text-align: right; flex-shrink: 0; margin-left: 8px; }}
   .heatmap {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; }}
-  .heat-cell {{ border-radius: 8px; padding: 12px 10px; text-align: center; }}
+  .heat-cell {{ border-radius: 8px; padding: 12px 10px; text-align: center; border: 1px solid var(--border); }}
   .heat-cell .name {{ font-size: 13px; font-weight: 500; }}
   .heat-cell .val {{ font-size: 15px; font-weight: 700; margin-top: 4px; }}
   .watchlist-row {{ display: flex; justify-content: space-between; align-items: center; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; margin-bottom: 8px; }}
@@ -413,7 +416,7 @@ def generate_html(digest, indices, sectors, watchlist):
   .spotlight-stat .num {{ font-size: 22px; font-weight: 700; }}
   .spotlight-stat .lab {{ font-size: 12px; color: var(--muted); margin-top: 2px; }}
   .stat-grid {{ display: flex; justify-content: space-around; flex-wrap: wrap; gap: 12px; margin-top: 20px; }}
-  footer {{ text-align: center; padding: 16px; color: var(--muted); font-size: 12px; border-top: 1px solid var(--border); }}
+  footer {{ text-align: center; padding: 16px; color: var(--muted); font-size: 12px; border-top: 1px solid var(--border); background: var(--card); }}
   @media (max-width: 600px) {{
     .header h1 {{ font-size: 20px; }}
     .ribbon {{ gap: 8px; }}
