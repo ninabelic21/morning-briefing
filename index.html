@@ -9,7 +9,7 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     html, body {
-      background: #F7F3EE;
+      background: #EFE9E0;
       color: #2C2418;
       font-family: 'Georgia', 'Times New Roman', serif;
       font-size: 16px;
@@ -22,7 +22,7 @@
 
     /* ─── Color Palette ─── */
     :root {
-      --bg: #F7F3EE;
+      --bg: #EFE9E0;
       --card: #FFFFFF;
       --text: #2C2418;
       --muted: #8A7E6F;
@@ -201,6 +201,16 @@
       padding-left: 13px;
     }
 
+    .story-headline {
+      font-family: 'Georgia', serif;
+      font-size: 15.5px;
+      font-weight: 700;
+      color: var(--text);
+      margin: 0 0 6px 0;
+      line-height: 1.35;
+      letter-spacing: -0.2px;
+    }
+
     .story-text {
       font-size: 14.5px;
       line-height: 1.75;
@@ -367,6 +377,38 @@
     #watch-weekly:checked ~ .wl-weekly { display: block; }
     #watch-monthly:checked ~ .wl-monthly { display: block; }
     #watch-threeMonth:checked ~ .wl-threeMonth { display: block; }
+
+    /* ─── Diverging Chart ─── */
+    .diverging-chart { display: flex; flex-direction: column; gap: 6px; margin-bottom: 8px; }
+    .div-row { display: flex; align-items: center; height: 28px; }
+    .div-label {
+      width: 52px; font-size: 12px; font-weight: 600; text-align: right;
+      padding-right: 8px; flex-shrink: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    .div-track { flex: 1; display: flex; align-items: center; height: 100%; }
+    .div-left { flex: 1; display: flex; justify-content: flex-end; align-items: center; height: 100%; }
+    .div-right { flex: 1; display: flex; justify-content: flex-start; align-items: center; height: 100%; }
+    .div-center { width: 1px; background: var(--border); height: 100%; flex-shrink: 0; }
+    .div-bar {
+      height: 20px; border-radius: 3px; display: flex; align-items: center;
+      font-size: 10px; font-weight: 600; color: white; min-width: 2px;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    .div-bar.pos { background: var(--green); border-radius: 0 3px 3px 0; margin-left: 1px; }
+    .div-bar.neg { background: var(--red); border-radius: 3px 0 0 3px; margin-right: 1px; }
+    .div-outside {
+      font-size: 11px; font-weight: 600; padding: 0 5px; white-space: nowrap;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    .div-outside.pos-text { color: var(--green); }
+    .div-outside.neg-text { color: var(--red); }
+    .zero-label {
+      font-size: 9px; color: var(--muted); margin-bottom: 20px;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      padding-left: 52px; display: flex;
+    }
+    .zero-label span { flex: 1; text-align: center; }
 
     .watchlist-item {
       display: flex;
@@ -561,6 +603,9 @@
       opacity: 0.6;
       margin-bottom: 2px;
       border-radius: 2px 2px 0 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 9px; font-weight: 700; color: white;
+      font-family: 'Inter', -apple-system, sans-serif;
     }
 
     .comparison-bar-global {
@@ -568,6 +613,9 @@
       background: linear-gradient(to top, var(--gold), var(--gold));
       opacity: 0.6;
       border-radius: 2px 2px 0 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 9px; font-weight: 700; color: white;
+      font-family: 'Inter', -apple-system, sans-serif;
     }
 
     .comparison-label {
@@ -694,6 +742,26 @@
     }).join('') + '</div>';
   }
 
+  function divergingChart(items) {
+    var html = '<div class="diverging-chart">';
+    items.forEach(function(b) {
+      var isPos = parseFloat(b.change) >= 0;
+      html += '<div class="div-row"><div class="div-label">' + esc(b.label) + '</div><div class="div-track">';
+      if (isPos) {
+        html += '<div class="div-left"></div><div class="div-center"></div>';
+        html += '<div class="div-right"><div class="div-bar pos" style="width:' + b.width + ';"></div>';
+        html += '<span class="div-outside pos-text">' + esc(b.change) + '</span></div>';
+      } else {
+        html += '<div class="div-left"><span class="div-outside neg-text">' + esc(b.change) + '</span>';
+        html += '<div class="div-bar neg" style="width:' + b.width + ';"></div></div>';
+        html += '<div class="div-center"></div><div class="div-right"></div>';
+      }
+      html += '</div></div>';
+    });
+    html += '</div><div class="zero-label"><span>0%</span></div>';
+    return html;
+  }
+
   function watchlistItems(items) {
     return items.map(function(w) {
       return '<div class="watchlist-item"><div>' +
@@ -727,7 +795,9 @@
       '<div class="story-accent-bar" style="background:' + sec.color + ';"></div>' +
       '<h2>' + esc(sec.title) + '</h2></div>';
     sec.stories.forEach(function(st) {
-      digestHTML += '<div class="story-item"><p class="story-text">' + esc(st.text) + '</p>' + sourcesHTML(st.sources) + '</div>';
+      digestHTML += '<div class="story-item">';
+      if (st.headline) { digestHTML += '<p class="story-headline">' + esc(st.headline) + '</p>'; }
+      digestHTML += '<p class="story-text">' + esc(st.text) + '</p>' + sourcesHTML(st.sources) + '</div>';
     });
     digestHTML += '</div>';
   });
@@ -762,7 +832,7 @@
   wHTML += '</div>';
   periodKeys.forEach(function(k) {
     var p = periods[k];
-    wHTML += '<div class="watchlist-content wl-' + k + '">' + barChart(p.chart, true) + watchlistItems(p.items) + '</div>';
+    wHTML += '<div class="watchlist-content wl-' + k + '">' + divergingChart(p.chart) + watchlistItems(p.items) + '</div>';
   });
   wHTML += '<p class="watchlist-note">' + esc(D.watchlist.note) + '</p>';
   document.getElementById('watchlist-content').innerHTML = wHTML;
@@ -790,8 +860,8 @@
     } else if (ch.type === 'comparison') {
       spHTML += '<div class="comparison-chart">' + ch.bars.map(function(b) {
         return '<div class="comparison-bar">' +
-          '<div class="comparison-bar-us" style="height:' + b.usHeight + ';"></div>' +
-          '<div class="comparison-bar-global" style="height:' + b.globalHeight + ';"></div>' +
+          '<div class="comparison-bar-us" style="height:' + b.usHeight + ';">' + (b.usVal ? esc(b.usVal) : '') + '</div>' +
+          '<div class="comparison-bar-global" style="height:' + b.globalHeight + ';">' + (b.globalVal ? esc(b.globalVal) : '') + '</div>' +
           '<div class="comparison-label">' + esc(b.label) + '</div></div>';
       }).join('') + '</div>';
     }
