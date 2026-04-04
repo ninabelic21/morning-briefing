@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Morning Briefing — April 4, 2026</title>
+  <title>Morning Briefing</title>
   <style>
     /* ─── Reset & Typography ─── */
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -108,7 +108,11 @@
       transition: all 0.2s;
     }
 
-    .tab-input:checked + .tab-label {
+    /* Checked tab label styling (inputs are siblings of .tabs-container) */
+    #tab-digest:checked ~ .tabs-container label[for="tab-digest"],
+    #tab-markets:checked ~ .tabs-container label[for="tab-markets"],
+    #tab-watchlist:checked ~ .tabs-container label[for="tab-watchlist"],
+    #tab-spotlight:checked ~ .tabs-container label[for="tab-spotlight"] {
       font-weight: 600;
       color: var(--text);
       border-bottom-color: var(--accent);
@@ -121,7 +125,10 @@
       flex: 1;
     }
 
-    .tab-input:checked ~ .tab-content {
+    #tab-digest:checked ~ #digest-content,
+    #tab-markets:checked ~ #markets-content,
+    #tab-watchlist:checked ~ #watchlist-content,
+    #tab-spotlight:checked ~ #spotlight-content {
       display: block;
     }
 
@@ -620,970 +627,182 @@
 <body>
 
 <div class="container">
-  <!-- Header -->
+  <!-- Header (populated by JS) -->
   <div class="header">
-    <div class="header-date">Saturday, April 4, 2026</div>
-    <h1>Good Morning, Caroline</h1>
-    <p>Markets closed · Good Friday weekend · Last trading: April 2</p>
+    <div class="header-date" id="h-date"></div>
+    <h1 id="h-greeting"></h1>
+    <p id="h-subtitle"></p>
   </div>
+
+  <!-- Radio inputs (must be siblings of tabs-container and tab-content for CSS selectors) -->
+  <input type="radio" id="tab-digest" name="main-tab" class="tab-input" checked>
+  <input type="radio" id="tab-markets" name="main-tab" class="tab-input">
+  <input type="radio" id="tab-watchlist" name="main-tab" class="tab-input">
+  <input type="radio" id="tab-spotlight" name="main-tab" class="tab-input">
 
   <!-- Tabs Navigation -->
   <div class="tabs-container">
-    <input type="radio" id="tab-digest" name="main-tab" class="tab-input" checked>
     <label for="tab-digest" class="tab-label">Digest</label>
-
-    <input type="radio" id="tab-markets" name="main-tab" class="tab-input">
     <label for="tab-markets" class="tab-label">Markets</label>
-
-    <input type="radio" id="tab-watchlist" name="main-tab" class="tab-input">
     <label for="tab-watchlist" class="tab-label">Watchlist</label>
-
-    <input type="radio" id="tab-spotlight" name="main-tab" class="tab-input">
     <label for="tab-spotlight" class="tab-label">Spotlight</label>
-
-    <!-- ═══ DIGEST TAB ═══ -->
-    <div class="tab-content" id="digest-content">
-      <!-- Market Ribbon -->
-      <div class="market-ribbon">
-        <div class="market-item">
-          <div class="market-label">S&P 500</div>
-          <div class="market-value">6,582.69</div>
-          <div class="market-change positive">+0.11%</div>
-        </div>
-        <div class="market-item">
-          <div class="market-label">NASDAQ</div>
-          <div class="market-value">21,879.18</div>
-          <div class="market-change positive">+0.18%</div>
-        </div>
-        <div class="market-item">
-          <div class="market-label">Dow</div>
-          <div class="market-value">46,504.67</div>
-          <div class="market-change negative">−0.13%</div>
-        </div>
-        <div class="market-item">
-          <div class="market-label">DAX</div>
-          <div class="market-value">22,772</div>
-          <div class="market-change negative">−2.26%</div>
-        </div>
-      </div>
-
-      <!-- Tech & AI Section -->
-      <div class="story-section">
-        <div class="story-header">
-          <div class="story-accent-bar" style="background: #8B6834;"></div>
-          <h2>Tech & AI</h2>
-        </div>
-
-        <div class="story-item">
-          <p class="story-text">Three frontier AI models launched in quick succession this spring. OpenAI released GPT-5.4 on March 5 in Standard, Pro, and Thinking variants, featuring a 1-million token context window and 75% computer use capability on the OSWorld benchmark — a 27.7pp jump over GPT-5.2. The model is 33% less likely to make individual claim errors compared to its predecessor. Google followed with Gemini 3.1 Pro, achieving 77.1% on the ARC-AGI-2 benchmark for novel logic pattern-solving, with a 1-million token context window spanning text, audio, images, video, and code. Meanwhile, xAI's Grok 4.20 moved from beta to production in February, posting a 78% non-hallucination rate — the highest of any tested model — using a novel 4-agent architecture where parallel agents cross-verify outputs.</p>
-          <div class="story-sources">
-            <a href="https://techcrunch.com/2026/03/05/openai-launches-gpt-5-4-with-pro-and-thinking-versions/" class="source-link" target="_blank" rel="noopener noreferrer">TechCrunch</a>
-            <a href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-1-pro/" class="source-link" target="_blank" rel="noopener noreferrer">Google AI Blog</a>
-            <a href="https://winbuzzer.com/2026/03/25/xai-grok-420-honesty-record-intelligence-gap-xcxwbn/" class="source-link" target="_blank" rel="noopener noreferrer">WinBuzzer</a>
-          </div>
-        </div>
-
-        <div class="story-item">
-          <p class="story-text">Meta unveiled four custom MTIA chip generations for AI inference, with MTIA 300 already deployed and MTIA 400, 450, and 500 following on a six-month cadence through 2027. Developed with Broadcom, the chips reduce Meta's dependency on NVIDIA and AMD, handling ranking, recommendations training, and GenAI inference workloads. The industry's pivot to agentic AI continues: Google's Gemma 4 (April 2) delivered strong agentic workflow performance, while OpenClaw surpassed 302,000 GitHub stars as the fastest-growing autonomous agent framework. However, security research reveals multi-agent systems have safety pass rates as low as 7.1%, highlighting significant risks in production deployments.</p>
-          <div class="story-sources">
-            <a href="https://ai.meta.com/blog/meta-mtia-scale-ai-chips-for-billions/" class="source-link" target="_blank" rel="noopener noreferrer">Meta AI Blog</a>
-            <a href="https://www.tomshardware.com/tech-industry/semiconductors/meta-reveals-four-new-mtia-chips-built-for-ai-inference" class="source-link" target="_blank" rel="noopener noreferrer">Tom's Hardware</a>
-            <a href="https://www.defenseone.com/technology/2026/04/startup-takes-different-approach-ai-assistants/412545/" class="source-link" target="_blank" rel="noopener noreferrer">Defense One</a>
-          </div>
-        </div>
-
-        <div class="story-item">
-          <p class="story-text">Effective today (April 4), Anthropic ended third-party agentic tool access for Claude subscribers, specifically targeting platforms like OpenClaw that placed 'outsized strain' on infrastructure. Users must migrate to pay-as-you-go API pricing for agent workflows, though Anthropic offered a one-time credit and up to 30% discount on pre-purchased usage bundles. Separately, Blackstone-owned AGS Health filed for a $500M IPO in India targeting a $3B valuation, backed by AI-driven medical coding and billing technology for US healthcare providers. The offering, advised by JM Financial, Jefferies, and JP Morgan, is expected late April or May.</p>
-          <div class="story-sources">
-            <a href="https://venturebeat.com/technology/anthropic-cuts-off-the-ability-to-use-claude-subscriptions-with-openclaw-and" class="source-link" target="_blank" rel="noopener noreferrer">VentureBeat</a>
-            <a href="https://www.bloomberg.com/news/articles/2026-04-02/blackstone-s-ags-health-said-to-file-for-500-million-india-ipo" class="source-link" target="_blank" rel="noopener noreferrer">Bloomberg</a>
-          </div>
-        </div>
-      </div>
-
-      <!-- World Politics Section -->
-      <div class="story-section">
-        <div class="story-header">
-          <div class="story-accent-bar" style="background: #7D5A2F;"></div>
-          <h2>World Politics</h2>
-        </div>
-
-        <div class="story-item">
-          <p class="story-text">Europe's most consequential 2026 vote takes place April 12 in Hungary, where Prime Minister Viktor Orbán — in power for 16 years — faces challenger Péter Magyar's center-right Tisza party. Magyar's movement, which won 30% in last year's EU Parliament elections, is pro-European and seeks to restore frozen EU funds and reduce Budapest's ties to Moscow. Polls are deeply polarized: PolitPro shows Tisza at 48.7% vs. Fidesz/KDNP at 40.8%, while the Orbán-aligned Nézőpont institute puts Fidesz ahead 46–40. Under Orbán, Hungary has blocked EU asylum reform, defense coordination, energy autonomy measures, Ukraine's membership talks, and €90B in collective loans. Hungary's economy grew only 0.5% on average in 2024–2025 with a 5% budget deficit — well above the 3% EU target — making economic stagnation a central campaign issue.</p>
-          <div class="story-sources">
-            <a href="https://www.csis.org/analysis/what-stake-hungarys-election" class="source-link" target="_blank" rel="noopener noreferrer">CSIS Analysis</a>
-            <a href="https://www.euronews.com/my-europe/2026/04/03/podcast-everything-you-need-to-know-about-the-hungarian-elections" class="source-link" target="_blank" rel="noopener noreferrer">Euronews</a>
-            <a href="https://carnegieendowment.org/europe/strategic-europe/2026/04/win-or-lose-orban-has-broken-hungarys-democracy" class="source-link" target="_blank" rel="noopener noreferrer">Carnegie Endowment</a>
-          </div>
-        </div>
-
-        <div class="story-item">
-          <p class="story-text">April 2 marked the one-year anniversary of Trump's 'Liberation Day' Executive Order 14257, which imposed sweeping reciprocal tariffs including 34% on China, 20% on the EU, and 46% on Vietnam. The initial shock sent US stocks plunging 12.4% — the biggest drop since COVID-19 — before a 9.52% single-day surge when parts of the policy were paused, the largest one-day S&P 500 gain since 2008. The US Court of International Trade vacated the tariffs in May 2025, the Federal Circuit affirmed in August, and in February 2026 the Supreme Court upheld the ruling in Learning Resources v. Trump, finding the use of emergency powers exceeded constitutional authority. Despite this, the government collected $166B from over 330,000 businesses before the ruling. On the anniversary, Trump imposed fresh 100% tariffs on patented pharmaceuticals and 50% on goods with high aluminum, steel, or copper content.</p>
-          <div class="story-sources">
-            <a href="https://www.bloomberg.com/news/newsletters/2026/03/30/trump-liberation-day-tariff-anniversary" class="source-link" target="_blank" rel="noopener noreferrer">Bloomberg</a>
-            <a href="https://www.npr.org/2026/04/02/nx-s1-5766424/trump-tariffs-inflation-economy" class="source-link" target="_blank" rel="noopener noreferrer">NPR</a>
-            <a href="https://en.wikipedia.org/wiki/Liberation_Day_tariffs" class="source-link" target="_blank" rel="noopener noreferrer">Wikipedia</a>
-          </div>
-        </div>
-
-        <div class="story-item">
-          <p class="story-text">In France, Palestinian-French MEP Rima Hassan was detained on April 2 on suspicion of 'apology for terrorism' over a social media post referencing the 1972 Ben Gurion Airport attack. The lawyer and Gaza conflict critic, elected to the European Parliament in 2024, was released after several hours and scheduled for trial in July. Her La France Insoumise party condemned the detention as political harassment. Meanwhile, European defense integration accelerates: all NATO allies are expected to meet the 2% GDP spending target, with a new 3.5% baseline committed at The Hague summit. European allies invested €106 billion in 2024 alone — a 42% year-over-year increase — with projected spending reaching €800 billion by 2030.</p>
-          <div class="story-sources">
-            <a href="https://www.aljazeera.com/news/2026/4/2/european-parliament-member-rima-hassan-taken-into-french-police-custody" class="source-link" target="_blank" rel="noopener noreferrer">Al Jazeera</a>
-            <a href="https://www.nato.int/en/what-we-do/introduction-to-nato/defence-expenditures-and-natos-5-commitment" class="source-link" target="_blank" rel="noopener noreferrer">NATO Official</a>
-            <a href="https://www.consilium.europa.eu/en/policies/defence-numbers/" class="source-link" target="_blank" rel="noopener noreferrer">EU Council</a>
-          </div>
-        </div>
-      </div>
-
-      <!-- Austria Section -->
-      <div class="story-section">
-        <div class="story-header">
-          <div class="story-accent-bar" style="background: #A04040;"></div>
-          <h2>Austria</h2>
-        </div>
-
-        <div class="story-item">
-          <p class="story-text">Austria's fuel-price brake (Spritpreisbremse) took effect April 2 at noon, cutting pump prices by 10 cents per litre through a two-part mechanism: a temporary 5-cent mineral oil tax reduction plus a mandatory 5-cent net selling price cut by fuel companies. The measure was triggered after Iran-conflict-driven oil surges caused EU benchmark prices to rise over 30% within two months. Small operators running 30 or fewer stations and highway stations are exempt. E-Control monitors compliance against relevant product quotations, and the measure automatically expires December 31, 2026. The FPÖ, holding 57 of 183 National Council seats as the largest opposition party, continues aggressive parliamentary scrutiny of the ÖVP-SPÖ-NEOS coalition.</p>
-          <div class="story-sources">
-            <a href="https://www.bmwet.gv.at/Presse/AktuellePressemeldungen/Spritpreisbremse.html" class="source-link" target="_blank" rel="noopener noreferrer">Bundesministerium</a>
-            <a href="https://www.parlament.gv.at/aktuelles/pk/jahr_2026/pk0262" class="source-link" target="_blank" rel="noopener noreferrer">Parlament.gv.at</a>
-            <a href="https://www.oeamtc.at/news/spritpreise-steigen-was-die-spritpreisbremse-bringt-85985762" class="source-link" target="_blank" rel="noopener noreferrer">ÖAMTC</a>
-          </div>
-        </div>
-
-        <div class="story-item">
-          <p class="story-text">Austria faces a June 7 deadline to transpose the EU Pay Transparency Directive, but has not yet published a final draft law. By that date, all EU member states must implement binding rules requiring companies with 100+ employees to publish regular pay gap reports and all employers to state minimum salary ranges in job advertisements. Separately, the government's largest Red-White-Red Card reform since 2011 is underway, with a draft bill circulating for public comment. The overhaul will migrate all applications to a single online portal managed by WKÖ and AMS, cutting processing times from 3–6 months to a guaranteed 8 weeks. For 2026, the Fachkräfteverordnung expanded to 64 priority occupations including software developers, AI safety experts, electricians, nurses, and doctors.</p>
-          <div class="story-sources">
-            <a href="https://www.schulmeister-consulting.com/en/magazine/overview/detail/the-eu-pay-transparency-directive-what-companies-in-austria-need-to-know-now" class="source-link" target="_blank" rel="noopener noreferrer">Schulmeister Consulting</a>
-            <a href="https://www.migration.gv.at/en/types-of-immigration/permanent-immigration/other-key-workers/" class="source-link" target="_blank" rel="noopener noreferrer">Migration.gv.at</a>
-          </div>
-        </div>
-      </div>
-
-      <!-- Stock Market Section -->
-      <div class="story-section">
-        <div class="story-header">
-          <div class="story-accent-bar" style="background: #3D7A47;"></div>
-          <h2>Stock Market</h2>
-        </div>
-
-        <div class="story-item">
-          <p class="story-text">Markets closed for Good Friday (April 3) through the weekend. The last session (April 2) saw dramatic intraday swings: the Dow fell 600+ points and the S&P and NASDAQ dropped 1.5–2.2% in early trading on an oil surge after Trump's Iran war comments, before recovering on reports of Oman-mediated Hormuz negotiations. At close, the S&P 500 stood at 6,582.69 (+0.11%), NASDAQ at 21,879.18 (+0.18%), and the Dow at 46,504.67 (−0.13%). The DAX plunged 2.26% to 22,772, giving back most of the prior day's 2.73% rally. Weekly performance was strong: NASDAQ +4.4%, S&P +3.4%, Dow +3%. The March jobs report beat expectations with 178,000 nonfarm payrolls added (vs. 60,000 forecast), unemployment held at 4.3%, and healthcare led with +76,400 positions. Walmart received multiple analyst upgrades — Bernstein raised its target from $122 to $129 — with the stock trading at $125.79, up 28% over the past year on explosive advertising revenue growth (+37% YoY).</p>
-          <div class="story-sources">
-            <a href="https://www.thestreet.com/latest-news/stock-market-today-apr-2-2026-updates" class="source-link" target="_blank" rel="noopener noreferrer">TheStreet</a>
-            <a href="https://www.fool.com/investing/2026/04/02/dow-sp-500-nasdaq-from-morning-meltdown-to-midday/" class="source-link" target="_blank" rel="noopener noreferrer">Motley Fool</a>
-            <a href="https://www.bls.gov/news.release/empsit.nr0.htm" class="source-link" target="_blank" rel="noopener noreferrer">BLS</a>
-          </div>
-        </div>
-      </div>
-
-      <!-- Geopolitics Section -->
-      <div class="story-section">
-        <div class="story-header">
-          <div class="story-accent-bar" style="background: #6B5B3E;"></div>
-          <h2>Geopolitics</h2>
-        </div>
-
-        <div class="story-item">
-          <p class="story-text">Iran has blocked the Strait of Hormuz to shipping since US-Israeli strikes began February 28, declaring formal closure from March 4. As of April 2, Iran agreed to allow Philippine-flagged vessels to transit following talks, but the broader blockade continues. On April 4, a 40-nation coalition led by UK Foreign Secretary Yvette Cooper discussed diplomatic measures to reopen the strait, though no concrete agreements emerged. The energy impact has been severe: Brent crude exceeded $100/barrel on March 8 and peaked at $126 — the largest supply disruption since the 1970s oil crisis. Two US planes have been downed and Iran struck Gulf refineries, extending the conflict into its fifth week. The humanitarian toll extends across the region: Hezbollah's return to combat with Israel triggered a ground invasion of Lebanon, displacing over 1 million people.</p>
-          <div class="story-sources">
-            <a href="https://www.aljazeera.com/news/2026/4/2/can-starmers-40-nation-coalition-open-the-strait-of-hormuz" class="source-link" target="_blank" rel="noopener noreferrer">Al Jazeera</a>
-            <a href="https://www.cnn.com/2026/04/02/world/live-news/iran-war-us-trump-oil-intl-hnk" class="source-link" target="_blank" rel="noopener noreferrer">CNN</a>
-            <a href="https://www.npr.org/2026/04/03/g-s1-116314/iran-hits-gulf-refineries-as-trump-warns-u-s-will-attack-iranian-bridges-power-plants" class="source-link" target="_blank" rel="noopener noreferrer">NPR</a>
-          </div>
-        </div>
-
-        <div class="story-item">
-          <p class="story-text">Trump's originally scheduled March 31–April 2 Beijing visit with Xi Jinping was postponed to mid-May, with conflicting reports suggesting a possible April 6–7 meeting at Mar-a-Lago. The White House attributed the delay to managing the Iran escalation and Hormuz reopening efforts, though analysts point to months of mounting frustrations and misaligned expectations. The summit could be the first of four 2026 meetings between the leaders, with topics expected to include the US-China truce set to expire November 2026, semiconductor restrictions, and rare earth export controls. UN Secretary-General Guterres warned the world is 'on the edge of wider war' as multiple flashpoints remain active across the Middle East.</p>
-          <div class="story-sources">
-            <a href="https://www.bloomberg.com/news/articles/2026/03/31/trump-s-delayed-xi-summit-gives-us-china-irritants-room-to-grow" class="source-link" target="_blank" rel="noopener noreferrer">Bloomberg</a>
-            <a href="https://thediplomat.com/2026/04/when-trump-goes-to-china-its-the-strategy-that-matters/" class="source-link" target="_blank" rel="noopener noreferrer">The Diplomat</a>
-            <a href="https://www.securitycouncilreport.org/monthly-forecast/2026-04/the-middle-east-including-the-palestinian-question-24.php" class="source-link" target="_blank" rel="noopener noreferrer">Security Council Report</a>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ═══ MARKETS TAB ═══ -->
-    <div class="tab-content" id="markets-content">
-      <div class="chart-section">
-        <h3>Daily Change</h3>
-        <div class="bar-chart">
-          <div class="bar-row">
-            <div class="bar-label">S&P</div>
-            <div class="bar-container">
-              <div class="bar positive" style="width: 40%;"><span>+0.11%</span></div>
-            </div>
-          </div>
-          <div class="bar-row">
-            <div class="bar-label">NDQ</div>
-            <div class="bar-container">
-              <div class="bar positive" style="width: 42%;"><span>+0.18%</span></div>
-            </div>
-          </div>
-          <div class="bar-row">
-            <div class="bar-label">Dow</div>
-            <div class="bar-container">
-              <div class="bar negative" style="width: 38%;"><span>−0.13%</span></div>
-            </div>
-          </div>
-          <div class="bar-row">
-            <div class="bar-label">DAX</div>
-            <div class="bar-container">
-              <div class="bar negative" style="width: 92%;"><span>−2.26%</span></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="chart-section">
-        <h3>Sector Heatmap</h3>
-        <div class="sector-heatmap">
-          <div class="sector-cell" style="background: rgba(61,122,71,0.16);">
-            <div class="sector-name">Tech</div>
-            <div class="sector-value" style="color: #3D7A47;">+0.45%</div>
-          </div>
-          <div class="sector-cell" style="background: rgba(181,52,43,0.27);">
-            <div class="sector-name">Healthcare</div>
-            <div class="sector-value" style="color: #B5342B;">−1.20%</div>
-          </div>
-          <div class="sector-cell" style="background: rgba(61,122,71,0.13);">
-            <div class="sector-name">Financials</div>
-            <div class="sector-value" style="color: #3D7A47;">+0.32%</div>
-          </div>
-          <div class="sector-cell" style="background: rgba(181,52,43,0.21);">
-            <div class="sector-name">Energy</div>
-            <div class="sector-value" style="color: #B5342B;">−0.78%</div>
-          </div>
-          <div class="sector-cell" style="background: rgba(61,122,71,0.19);">
-            <div class="sector-name">Consumer</div>
-            <div class="sector-value" style="color: #3D7A47;">+0.58%</div>
-          </div>
-          <div class="sector-cell" style="background: rgba(181,52,43,0.07);">
-            <div class="sector-name">Industrial</div>
-            <div class="sector-value" style="color: #B5342B;">−0.15%</div>
-          </div>
-          <div class="sector-cell" style="background: rgba(181,52,43,0.15);">
-            <div class="sector-name">Materials</div>
-            <div class="sector-value" style="color: #B5342B;">−0.42%</div>
-          </div>
-          <div class="sector-cell" style="background: rgba(61,122,71,0.10);">
-            <div class="sector-name">Utilities</div>
-            <div class="sector-value" style="color: #3D7A47;">+0.21%</div>
-          </div>
-          <div class="sector-cell" style="background: rgba(61,122,71,0.08);">
-            <div class="sector-name">Telecom</div>
-            <div class="sector-value" style="color: #3D7A47;">+0.12%</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ═══ WATCHLIST TAB ═══ -->
-    <div class="tab-content" id="watchlist-content">
-      <div class="period-toggle">
-        <input type="radio" id="watch-daily" name="watch-period" class="period-input" checked>
-        <label for="watch-daily" class="period-label">1D</label>
-
-        <input type="radio" id="watch-weekly" name="watch-period" class="period-input">
-        <label for="watch-weekly" class="period-label">1W</label>
-
-        <input type="radio" id="watch-monthly" name="watch-period" class="period-input">
-        <label for="watch-monthly" class="period-label">1M</label>
-
-        <input type="radio" id="watch-3m" name="watch-period" class="period-input">
-        <label for="watch-3m" class="period-label">3M</label>
-      </div>
-
-      <!-- Daily Watchlist -->
-      <div class="watchlist-content" id="daily-content">
-        <div class="bar-chart" style="margin-bottom: 24px;">
-          <div class="bar-row">
-            <div class="bar-label">WMT</div>
-            <div class="bar-container">
-              <div class="bar positive" style="width: 25%;"></div>
-            </div>
-          </div>
-          <div class="bar-row">
-            <div class="bar-label">MSFT</div>
-            <div class="bar-container">
-              <div class="bar positive" style="width: 12%;"></div>
-            </div>
-          </div>
-          <div class="bar-row">
-            <div class="bar-label">ETF146</div>
-            <div class="bar-container">
-              <div class="bar negative" style="width: 18%;"></div>
-            </div>
-          </div>
-          <div class="bar-row">
-            <div class="bar-label">NVDA</div>
-            <div class="bar-container">
-              <div class="bar negative" style="width: 22%;"></div>
-            </div>
-          </div>
-          <div class="bar-row">
-            <div class="bar-label">MPWR</div>
-            <div class="bar-container">
-              <div class="bar negative" style="width: 25%;"></div>
-            </div>
-          </div>
-          <div class="bar-row">
-            <div class="bar-label">A0RPWJ</div>
-            <div class="bar-container">
-              <div class="bar negative" style="width: 56%;"></div>
-            </div>
-          </div>
-          <div class="bar-row">
-            <div class="bar-label">LLY</div>
-            <div class="bar-container">
-              <div class="bar negative" style="width: 79%;"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="watchlist-item">
-          <div>
-            <span class="watchlist-ticker">WMT</span>
-            <span class="watchlist-full-name">Walmart</span>
-          </div>
-          <div class="watchlist-prices">
-            <div class="watchlist-price-eur">€108.44</div>
-            <div class="watchlist-price-usd">$125.79</div>
-            <div class="watchlist-change positive">+0.58%</div>
-          </div>
-        </div>
-
-        <div class="watchlist-item">
-          <div>
-            <span class="watchlist-ticker">MSFT</span>
-            <span class="watchlist-full-name">Microsoft</span>
-          </div>
-          <div class="watchlist-prices">
-            <div class="watchlist-price-eur">€321.88</div>
-            <div class="watchlist-price-usd">$373.46</div>
-            <div class="watchlist-change positive">+0.25%</div>
-          </div>
-        </div>
-
-        <div class="watchlist-item">
-          <div>
-            <span class="watchlist-ticker">ETF146</span>
-            <span class="watchlist-full-name">Amundi MSCI World</span>
-          </div>
-          <div class="watchlist-prices">
-            <div class="watchlist-price-eur">€586.26</div>
-            <div class="watchlist-price-usd">—</div>
-            <div class="watchlist-change negative">−0.38%</div>
-          </div>
-        </div>
-
-        <div class="watchlist-item">
-          <div>
-            <span class="watchlist-ticker">NVDA</span>
-            <span class="watchlist-full-name">NVIDIA</span>
-          </div>
-          <div class="watchlist-prices">
-            <div class="watchlist-price-eur">€152.89</div>
-            <div class="watchlist-price-usd">$177.39</div>
-            <div class="watchlist-change negative">−0.44%</div>
-          </div>
-        </div>
-
-        <div class="watchlist-item">
-          <div>
-            <span class="watchlist-ticker">MPWR</span>
-            <span class="watchlist-full-name">Monolithic Power</span>
-          </div>
-          <div class="watchlist-prices">
-            <div class="watchlist-price-eur">€963.92</div>
-            <div class="watchlist-price-usd">$1,118.49</div>
-            <div class="watchlist-change negative">−0.49%</div>
-          </div>
-        </div>
-
-        <div class="watchlist-item">
-          <div>
-            <span class="watchlist-ticker">A0RPWJ</span>
-            <span class="watchlist-full-name">iShares MSCI EM</span>
-          </div>
-          <div class="watchlist-prices">
-            <div class="watchlist-price-eur">€56.59</div>
-            <div class="watchlist-price-usd">—</div>
-            <div class="watchlist-change negative">−1.12%</div>
-          </div>
-        </div>
-
-        <div class="watchlist-item">
-          <div>
-            <span class="watchlist-ticker">LLY</span>
-            <span class="watchlist-full-name">Eli Lilly</span>
-          </div>
-          <div class="watchlist-prices">
-            <div class="watchlist-price-eur">€879.80</div>
-            <div class="watchlist-price-usd">$935.58</div>
-            <div class="watchlist-change negative">−1.98%</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Weekly Watchlist -->
-      <div class="watchlist-content" id="weekly-content">
-        <div class="bar-chart" style="margin-bottom: 24px;">
-          <div class="bar-row">
-            <div class="bar-label">WMT</div>
-            <div class="bar-container">
-              <div class="bar positive" style="width: 62%;"></div>
-            </div>
-          </div>
-          <div class="bar-row">
-            <div class="bar-label">MSFT</div>
-            <div class="bar-container">
-              <div class="bar positive" style="width: 50%;"></div>
-            </div>
-          </div>
-          <div class="bar-row">
-            <div class="bar-label">NVDA</div>
-            <div class="bar-container">
-              <div class="bar positive" style="width: 44%;"></div>
-            </div>
-          </div>
-          <div class="bar-row">
-            <div class="bar-label">MPWR</div>
-            <div class="bar-container">
-              <div class="bar positive" style="width: 27%;"></div>
-            </div>
-          </div>
-          <div class="bar-row">
-            <div class="bar-label">ETF146</div>
-            <div class="bar-container">
-              <div class="bar negative" style="width: 6%;"></div>
-            </div>
-          </div>
-          <div class="bar-row">
-            <div class="bar-label">A0RPWJ</div>
-            <div class="bar-container">
-              <div class="bar negative" style="width: 45%;"></div>
-            </div>
-          </div>
-          <div class="bar-row">
-            <div class="bar-label">LLY</div>
-            <div class="bar-container">
-              <div class="bar negative" style="width: 93%;"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="watchlist-item">
-          <div>
-            <span class="watchlist-ticker">WMT</span>
-            <span class="watchlist-full-name">Walmart</span>
-          </div>
-          <div class="watchlist-prices">
-            <div class="watchlist-price-eur">€108.44</div>
-            <div class="watchlist-price-usd">$125.79</div>
-            <div class="watchlist-change positive">+3.2%</div>
-          </div>
-        </div>
-
-        <div class="watchlist-item">
-          <div>
-            <span class="watchlist-ticker">MSFT</span>
-            <span class="watchlist-full-name">Microsoft</span>
-          </div>
-          <div class="watchlist-prices">
-            <div class="watchlist-price-eur">€321.88</div>
-            <div class="watchlist-price-usd">$373.46</div>
-            <div class="watchlist-change positive">+2.1%</div>
-          </div>
-        </div>
-
-        <div class="watchlist-item">
-          <div>
-            <span class="watchlist-ticker">NVDA</span>
-            <span class="watchlist-full-name">NVIDIA</span>
-          </div>
-          <div class="watchlist-prices">
-            <div class="watchlist-price-eur">€152.89</div>
-            <div class="watchlist-price-usd">$177.39</div>
-            <div class="watchlist-change positive">+1.8%</div>
-          </div>
-        </div>
-
-        <div class="watchlist-item">
-          <div>
-            <span class="watchlist-ticker">MPWR</span>
-            <span class="watchlist-full-name">Monolithic Power</span>
-          </div>
-          <div class="watchlist-prices">
-            <div class="watchlist-price-eur">€963.92</div>
-            <div class="watchlist-price-usd">$1,118.49</div>
-            <div class="watchlist-change positive">+0.9%</div>
-          </div>
-        </div>
-
-        <div class="watchlist-item">
-          <div>
-            <span class="watchlist-ticker">ETF146</span>
-            <span class="watchlist-full-name">Amundi MSCI World</span>
-          </div>
-          <div class="watchlist-prices">
-            <div class="watchlist-price-eur">€586.26</div>
-            <div class="watchlist-price-usd">—</div>
-            <div class="watchlist-change negative">−0.2%</div>
-          </div>
-        </div>
-
-        <div class="watchlist-item">
-          <div>
-            <span class="watchlist-ticker">A0RPWJ</span>
-            <span class="watchlist-full-name">iShares MSCI EM</span>
-          </div>
-          <div class="watchlist-prices">
-            <div class="watchlist-price-eur">€56.59</div>
-            <div class="watchlist-price-usd">—</div>
-            <div class="watchlist-change negative">−1.5%</div>
-          </div>
-        </div>
-
-        <div class="watchlist-item">
-          <div>
-            <span class="watchlist-ticker">LLY</span>
-            <span class="watchlist-full-name">Eli Lilly</span>
-          </div>
-          <div class="watchlist-prices">
-            <div class="watchlist-price-eur">€879.80</div>
-            <div class="watchlist-price-usd">$935.58</div>
-            <div class="watchlist-change negative">−3.1%</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Monthly Watchlist -->
-      <div class="watchlist-content" id="monthly-content">
-        <div class="bar-chart" style="margin-bottom: 24px;">
-          <div class="bar-row">
-            <div class="bar-label">NVDA</div>
-            <div class="bar-container">
-              <div class="bar positive" style="width: 42%;"></div>
-            </div>
-          </div>
-          <div class="bar-row">
-            <div class="bar-label">MPWR</div>
-            <div class="bar-container">
-              <div class="bar positive" style="width: 26%;"></div>
-            </div>
-          </div>
-          <div class="bar-row">
-            <div class="bar-label">MSFT</div>
-            <div class="bar-container">
-              <div class="bar positive" style="width: 20.5%;"></div>
-            </div>
-          </div>
-          <div class="bar-row">
-            <div class="bar-label">WMT</div>
-            <div class="bar-container">
-              <div class="bar positive" style="width: 14%;"></div>
-            </div>
-          </div>
-          <div class="bar-row">
-            <div class="bar-label">ETF146</div>
-            <div class="bar-container">
-              <div class="bar positive" style="width: 6%;"></div>
-            </div>
-          </div>
-          <div class="bar-row">
-            <div class="bar-label">A0RPWJ</div>
-            <div class="bar-container">
-              <div class="bar negative" style="width: 4%;"></div>
-            </div>
-          </div>
-          <div class="bar-row">
-            <div class="bar-label">LLY</div>
-            <div class="bar-container">
-              <div class="bar negative" style="width: 28%;"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="watchlist-item">
-          <div>
-            <span class="watchlist-ticker">NVDA</span>
-            <span class="watchlist-full-name">NVIDIA</span>
-          </div>
-          <div class="watchlist-prices">
-            <div class="watchlist-price-eur">€152.89</div>
-            <div class="watchlist-price-usd">$177.39</div>
-            <div class="watchlist-change positive">+8.4%</div>
-          </div>
-        </div>
-
-        <div class="watchlist-item">
-          <div>
-            <span class="watchlist-ticker">MPWR</span>
-            <span class="watchlist-full-name">Monolithic Power</span>
-          </div>
-          <div class="watchlist-prices">
-            <div class="watchlist-price-eur">€963.92</div>
-            <div class="watchlist-price-usd">$1,118.49</div>
-            <div class="watchlist-change positive">+5.2%</div>
-          </div>
-        </div>
-
-        <div class="watchlist-item">
-          <div>
-            <span class="watchlist-ticker">MSFT</span>
-            <span class="watchlist-full-name">Microsoft</span>
-          </div>
-          <div class="watchlist-prices">
-            <div class="watchlist-price-eur">€321.88</div>
-            <div class="watchlist-price-usd">$373.46</div>
-            <div class="watchlist-change positive">+4.1%</div>
-          </div>
-        </div>
-
-        <div class="watchlist-item">
-          <div>
-            <span class="watchlist-ticker">WMT</span>
-            <span class="watchlist-full-name">Walmart</span>
-          </div>
-          <div class="watchlist-prices">
-            <div class="watchlist-price-eur">€108.44</div>
-            <div class="watchlist-price-usd">$125.79</div>
-            <div class="watchlist-change positive">+2.8%</div>
-          </div>
-        </div>
-
-        <div class="watchlist-item">
-          <div>
-            <span class="watchlist-ticker">ETF146</span>
-            <span class="watchlist-full-name">Amundi MSCI World</span>
-          </div>
-          <div class="watchlist-prices">
-            <div class="watchlist-price-eur">€586.26</div>
-            <div class="watchlist-price-usd">—</div>
-            <div class="watchlist-change positive">+1.2%</div>
-          </div>
-        </div>
-
-        <div class="watchlist-item">
-          <div>
-            <span class="watchlist-ticker">A0RPWJ</span>
-            <span class="watchlist-full-name">iShares MSCI EM</span>
-          </div>
-          <div class="watchlist-prices">
-            <div class="watchlist-price-eur">€56.59</div>
-            <div class="watchlist-price-usd">—</div>
-            <div class="watchlist-change negative">−0.8%</div>
-          </div>
-        </div>
-
-        <div class="watchlist-item">
-          <div>
-            <span class="watchlist-ticker">LLY</span>
-            <span class="watchlist-full-name">Eli Lilly</span>
-          </div>
-          <div class="watchlist-prices">
-            <div class="watchlist-price-eur">€879.80</div>
-            <div class="watchlist-price-usd">$935.58</div>
-            <div class="watchlist-change negative">−5.6%</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 3-Month Watchlist -->
-      <div class="watchlist-content" id="3m-content">
-        <div class="bar-chart" style="margin-bottom: 24px;">
-          <div class="bar-row">
-            <div class="bar-label">NVDA</div>
-            <div class="bar-container">
-              <div class="bar positive" style="width: 71%;"></div>
-            </div>
-          </div>
-          <div class="bar-row">
-            <div class="bar-label">MPWR</div>
-            <div class="bar-container">
-              <div class="bar positive" style="width: 49%;"></div>
-            </div>
-          </div>
-          <div class="bar-row">
-            <div class="bar-label">MSFT</div>
-            <div class="bar-container">
-              <div class="bar positive" style="width: 36.5%;"></div>
-            </div>
-          </div>
-          <div class="bar-row">
-            <div class="bar-label">WMT</div>
-            <div class="bar-container">
-              <div class="bar positive" style="width: 30.5%;"></div>
-            </div>
-          </div>
-          <div class="bar-row">
-            <div class="bar-label">A0RPWJ</div>
-            <div class="bar-container">
-              <div class="bar positive" style="width: 17%;"></div>
-            </div>
-          </div>
-          <div class="bar-row">
-            <div class="bar-label">ETF146</div>
-            <div class="bar-container">
-              <div class="bar positive" style="width: 14.5%;"></div>
-            </div>
-          </div>
-          <div class="bar-row">
-            <div class="bar-label">LLY</div>
-            <div class="bar-container">
-              <div class="bar negative" style="width: 10.5%;"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="watchlist-item">
-          <div>
-            <span class="watchlist-ticker">NVDA</span>
-            <span class="watchlist-full-name">NVIDIA</span>
-          </div>
-          <div class="watchlist-prices">
-            <div class="watchlist-price-eur">€152.89</div>
-            <div class="watchlist-price-usd">$177.39</div>
-            <div class="watchlist-change positive">+14.2%</div>
-          </div>
-        </div>
-
-        <div class="watchlist-item">
-          <div>
-            <span class="watchlist-ticker">MPWR</span>
-            <span class="watchlist-full-name">Monolithic Power</span>
-          </div>
-          <div class="watchlist-prices">
-            <div class="watchlist-price-eur">€963.92</div>
-            <div class="watchlist-price-usd">$1,118.49</div>
-            <div class="watchlist-change positive">+9.8%</div>
-          </div>
-        </div>
-
-        <div class="watchlist-item">
-          <div>
-            <span class="watchlist-ticker">MSFT</span>
-            <span class="watchlist-full-name">Microsoft</span>
-          </div>
-          <div class="watchlist-prices">
-            <div class="watchlist-price-eur">€321.88</div>
-            <div class="watchlist-price-usd">$373.46</div>
-            <div class="watchlist-change positive">+7.3%</div>
-          </div>
-        </div>
-
-        <div class="watchlist-item">
-          <div>
-            <span class="watchlist-ticker">WMT</span>
-            <span class="watchlist-full-name">Walmart</span>
-          </div>
-          <div class="watchlist-prices">
-            <div class="watchlist-price-eur">€108.44</div>
-            <div class="watchlist-price-usd">$125.79</div>
-            <div class="watchlist-change positive">+6.1%</div>
-          </div>
-        </div>
-
-        <div class="watchlist-item">
-          <div>
-            <span class="watchlist-ticker">A0RPWJ</span>
-            <span class="watchlist-full-name">iShares MSCI EM</span>
-          </div>
-          <div class="watchlist-prices">
-            <div class="watchlist-price-eur">€56.59</div>
-            <div class="watchlist-price-usd">—</div>
-            <div class="watchlist-change positive">+3.4%</div>
-          </div>
-        </div>
-
-        <div class="watchlist-item">
-          <div>
-            <span class="watchlist-ticker">ETF146</span>
-            <span class="watchlist-full-name">Amundi MSCI World</span>
-          </div>
-          <div class="watchlist-prices">
-            <div class="watchlist-price-eur">€586.26</div>
-            <div class="watchlist-price-usd">—</div>
-            <div class="watchlist-change positive">+2.9%</div>
-          </div>
-        </div>
-
-        <div class="watchlist-item">
-          <div>
-            <span class="watchlist-ticker">LLY</span>
-            <span class="watchlist-full-name">Eli Lilly</span>
-          </div>
-          <div class="watchlist-prices">
-            <div class="watchlist-price-eur">€879.80</div>
-            <div class="watchlist-price-usd">$935.58</div>
-            <div class="watchlist-change negative">−2.1%</div>
-          </div>
-        </div>
-      </div>
-
-      <p class="watchlist-note">EUR/USD rate: ~0.862 (April 2) · ETF prices in EUR</p>
-    </div>
-
-    <!-- ═══ SPOTLIGHT TAB ═══ -->
-    <div class="tab-content" id="spotlight-content">
-      <div class="spotlight-header-tag">This Week's Focus</div>
-      <h2 class="spotlight-title">Liberation Day — One Year Later</h2>
-      <p class="spotlight-intro">One year ago, sweeping tariffs reshaped global trade. The S&P 500 plunged 12.4%, then surged 9.52% in a single day. The Supreme Court has since ruled the regime unconstitutional — but the ripple effects on capital flows may be permanent.</p>
-
-      <!-- Key Stats -->
-      <div class="spotlight-stats">
-        <div class="stat-card">
-          <div class="stat-value" style="color: #B5342B;">−12.4%</div>
-          <div class="stat-label">Initial Drop</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value" style="color: #3D7A47;">+16.0%</div>
-          <div class="stat-label">1-Year Return</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value" style="color: #8B6834;">+18.0%</div>
-          <div class="stat-label">Global (ACWI)</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value" style="color: #A67B2E;">$166B</div>
-          <div class="stat-label">Tariffs Collected</div>
-        </div>
-      </div>
-
-      <!-- Recovery Path Chart -->
-      <div class="chart-wrapper">
-        <h3>S&P 500 Recovery Path</h3>
-        <div class="chart-bars">
-          <div class="chart-bar-row">
-            <div class="chart-bar-label">May '25</div>
-            <div class="chart-bar-container">
-              <div class="chart-bar-fill recovery-fill" style="width: 24%; justify-content: center; color: white;">−12.4%</div>
-            </div>
-          </div>
-          <div class="chart-bar-row">
-            <div class="chart-bar-label">Jun '25</div>
-            <div class="chart-bar-container">
-              <div class="chart-bar-fill recovery-fill" style="width: 17%; justify-content: center; color: white;">−4.2%</div>
-            </div>
-          </div>
-          <div class="chart-bar-row">
-            <div class="chart-bar-label">Sep '25</div>
-            <div class="chart-bar-container">
-              <div class="chart-bar-fill recovery-fill" style="width: 10.5%; justify-content: center;">+2.1%</div>
-            </div>
-          </div>
-          <div class="chart-bar-row">
-            <div class="chart-bar-label">Dec '25</div>
-            <div class="chart-bar-container">
-              <div class="chart-bar-fill recovery-fill" style="width: 34%; justify-content: center;">+8.5%</div>
-            </div>
-          </div>
-          <div class="chart-bar-row">
-            <div class="chart-bar-label">Mar '26</div>
-            <div class="chart-bar-container">
-              <div class="chart-bar-fill recovery-fill" style="width: 56%; justify-content: center;">+14.0%</div>
-            </div>
-          </div>
-          <div class="chart-bar-row">
-            <div class="chart-bar-label">Apr '26</div>
-            <div class="chart-bar-container">
-              <div class="chart-bar-fill recovery-fill" style="width: 64%; justify-content: center;">+16.0%</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Tariff Rates Chart -->
-      <div class="chart-wrapper">
-        <h3>Original Tariff Rates by Country</h3>
-        <div class="chart-bars">
-          <div class="chart-bar-row">
-            <div class="chart-bar-label">Vietnam</div>
-            <div class="chart-bar-container">
-              <div class="chart-bar-fill tariff-fill" style="width: 92%;"></div>
-            </div>
-          </div>
-          <div class="chart-bar-row">
-            <div class="chart-bar-label">China</div>
-            <div class="chart-bar-container">
-              <div class="chart-bar-fill tariff-fill" style="width: 68%;"></div>
-            </div>
-          </div>
-          <div class="chart-bar-row">
-            <div class="chart-bar-label">India</div>
-            <div class="chart-bar-container">
-              <div class="chart-bar-fill tariff-fill" style="width: 52%;"></div>
-            </div>
-          </div>
-          <div class="chart-bar-row">
-            <div class="chart-bar-label">Japan</div>
-            <div class="chart-bar-container">
-              <div class="chart-bar-fill tariff-fill" style="width: 48%;"></div>
-            </div>
-          </div>
-          <div class="chart-bar-row">
-            <div class="chart-bar-label">EU</div>
-            <div class="chart-bar-container">
-              <div class="chart-bar-fill tariff-fill" style="width: 40%;"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- US vs Global Chart -->
-      <div class="chart-wrapper">
-        <h3>US vs Global Performance</h3>
-        <div class="comparison-chart">
-          <div class="comparison-bar">
-            <div class="comparison-bar-us" style="height: 24px;"></div>
-            <div class="comparison-bar-global" style="height: 32px;"></div>
-            <div class="comparison-label">Apr '25</div>
-          </div>
-          <div class="comparison-bar">
-            <div class="comparison-bar-us" style="height: 18px;"></div>
-            <div class="comparison-bar-global" style="height: 38px;"></div>
-            <div class="comparison-label">Jul '25</div>
-          </div>
-          <div class="comparison-bar">
-            <div class="comparison-bar-us" style="height: 42px;"></div>
-            <div class="comparison-bar-global" style="height: 52px;"></div>
-            <div class="comparison-label">Oct '25</div>
-          </div>
-          <div class="comparison-bar">
-            <div class="comparison-bar-us" style="height: 56px;"></div>
-            <div class="comparison-bar-global" style="height: 70px;"></div>
-            <div class="comparison-label">Jan '26</div>
-          </div>
-          <div class="comparison-bar">
-            <div class="comparison-bar-us" style="height: 70px;"></div>
-            <div class="comparison-bar-global" style="height: 90px;"></div>
-            <div class="comparison-label">Apr '26</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="chart-legend">
-        <span class="legend-item"><span class="legend-dot legend-us"></span> MSCI USA +14%</span>
-        <span class="legend-item"><span class="legend-dot legend-global"></span> MSCI ACWI +18%</span>
-      </div>
-
-      <div class="spotlight-sources">
-        <a href="https://www.bloomberg.com/news/newsletters/2026/03/30/trump-liberation-day-tariff-anniversary" class="source-link" target="_blank" rel="noopener noreferrer">Bloomberg</a>
-        <a href="https://en.wikipedia.org/wiki/Liberation_Day_tariffs" class="source-link" target="_blank" rel="noopener noreferrer">SCOTUS</a>
-        <a href="https://www.cbp.gov" class="source-link" target="_blank" rel="noopener noreferrer">US CBP</a>
-        <a href="https://www.msci.com" class="source-link" target="_blank" rel="noopener noreferrer">MSCI</a>
-      </div>
-    </div>
   </div>
+
+  <!-- ═══ DIGEST TAB ═══ -->
+  <div class="tab-content" id="digest-content"></div>
+
+  <!-- ═══ MARKETS TAB ═══ -->
+  <div class="tab-content" id="markets-content"></div>
+
+  <!-- ═══ WATCHLIST TAB ═══ -->
+  <div class="tab-content" id="watchlist-content"></div>
+
+  <!-- ═══ SPOTLIGHT TAB ═══ -->
+  <div class="tab-content" id="spotlight-content"></div>
 
   <!-- Footer -->
-  <div class="footer">
-    Generated April 4, 2026 · Data as of market close April 2 · Not financial advice
-  </div>
+  <div class="footer" id="footer-text"></div>
 </div>
+
+<script src="data.js"></script>
+<script>
+(function() {
+  var D = window.BRIEFING;
+  if (!D) { document.body.innerHTML = '<p style="padding:40px;text-align:center;color:#8A7E6F;">Loading data…</p>'; return; }
+
+  // ─── Helpers ───
+  function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+  function dir(v) { return parseFloat(v) >= 0 ? 'positive' : 'negative'; }
+
+  function sourcesHTML(sources) {
+    return '<div class="story-sources">' + sources.map(function(s) {
+      return '<a href="' + esc(s.url) + '" class="source-link" target="_blank" rel="noopener noreferrer">' + esc(s.name) + '</a>';
+    }).join('') + '</div>';
+  }
+
+  function barChart(items, extraClass) {
+    return '<div class="bar-chart"' + (extraClass ? ' style="margin-bottom:24px"' : '') + '>' + items.map(function(b) {
+      return '<div class="bar-row"><div class="bar-label">' + esc(b.label) + '</div>' +
+        '<div class="bar-container"><div class="bar ' + dir(b.change) + '" style="width:' + b.width + ';">' +
+        (b.showLabel !== false ? '<span>' + esc(b.change) + '</span>' : '') +
+        '</div></div></div>';
+    }).join('') + '</div>';
+  }
+
+  function watchlistItems(items) {
+    return items.map(function(w) {
+      return '<div class="watchlist-item"><div>' +
+        '<span class="watchlist-ticker">' + esc(w.ticker) + '</span>' +
+        '<span class="watchlist-full-name">' + esc(w.name) + '</span>' +
+        '</div><div class="watchlist-prices">' +
+        '<div class="watchlist-price-eur">' + esc(w.priceEUR) + '</div>' +
+        '<div class="watchlist-price-usd">' + esc(w.priceUSD) + '</div>' +
+        '<div class="watchlist-change ' + dir(w.change) + '">' + esc(w.change) + '</div>' +
+        '</div></div>';
+    }).join('');
+  }
+
+  // ─── Header ───
+  document.getElementById('h-date').textContent = D.date;
+  document.getElementById('h-greeting').textContent = D.greeting;
+  document.getElementById('h-subtitle').textContent = D.subtitle;
+  document.title = 'Morning Briefing — ' + D.date;
+
+  // ─── Digest Tab ───
+  var digestHTML = '';
+  // Market ribbon
+  digestHTML += '<div class="market-ribbon">' + D.marketRibbon.map(function(m) {
+    return '<div class="market-item"><div class="market-label">' + esc(m.label) + '</div>' +
+      '<div class="market-value">' + esc(m.value) + '</div>' +
+      '<div class="market-change ' + dir(m.change) + '">' + esc(m.change) + '</div></div>';
+  }).join('') + '</div>';
+  // Story sections
+  D.digest.forEach(function(sec) {
+    digestHTML += '<div class="story-section"><div class="story-header">' +
+      '<div class="story-accent-bar" style="background:' + sec.color + ';"></div>' +
+      '<h2>' + esc(sec.title) + '</h2></div>';
+    sec.stories.forEach(function(st) {
+      digestHTML += '<div class="story-item"><p class="story-text">' + esc(st.text) + '</p>' + sourcesHTML(st.sources) + '</div>';
+    });
+    digestHTML += '</div>';
+  });
+  document.getElementById('digest-content').innerHTML = digestHTML;
+
+  // ─── Markets Tab ───
+  var mktsHTML = '';
+  mktsHTML += '<div class="chart-section"><h3>Daily Change</h3>' + barChart(D.markets.dailyChange) + '</div>';
+  mktsHTML += '<div class="chart-section"><h3>Sector Heatmap</h3><div class="sector-heatmap">';
+  D.markets.sectors.forEach(function(s) {
+    mktsHTML += '<div class="sector-cell" style="background:' + s.bg + ';"><div class="sector-name">' + esc(s.name) +
+      '</div><div class="sector-value" style="color:' + s.color + ';">' + esc(s.value) + '</div></div>';
+  });
+  mktsHTML += '</div></div>';
+  document.getElementById('markets-content').innerHTML = mktsHTML;
+
+  // ─── Watchlist Tab ───
+  var periods = D.watchlist.periods;
+  var periodKeys = ['daily','weekly','monthly','threeMonth'];
+  var periodLabels = ['1D','1W','1M','3M'];
+  var wHTML = '<div class="period-toggle">';
+  periodKeys.forEach(function(k, i) {
+    var id = 'watch-' + k;
+    wHTML += '<input type="radio" id="' + id + '" name="watch-period" class="period-input"' + (i === 0 ? ' checked' : '') + '>';
+    wHTML += '<label for="' + id + '" class="period-label">' + periodLabels[i] + '</label>';
+  });
+  wHTML += '</div>';
+  periodKeys.forEach(function(k) {
+    var p = periods[k];
+    wHTML += '<div class="watchlist-content">' + barChart(p.chart, true) + watchlistItems(p.items) + '</div>';
+  });
+  wHTML += '<p class="watchlist-note">' + esc(D.watchlist.note) + '</p>';
+  document.getElementById('watchlist-content').innerHTML = wHTML;
+
+  // ─── Spotlight Tab ───
+  var spHTML = '';
+  spHTML += '<div class="spotlight-header-tag">' + esc(D.spotlight.tag) + '</div>';
+  spHTML += '<h2 class="spotlight-title">' + esc(D.spotlight.title) + '</h2>';
+  spHTML += '<p class="spotlight-intro">' + esc(D.spotlight.intro) + '</p>';
+  // Stats
+  spHTML += '<div class="spotlight-stats">' + D.spotlight.stats.map(function(s) {
+    return '<div class="stat-card"><div class="stat-value" style="color:' + s.color + ';">' + esc(s.value) +
+      '</div><div class="stat-label">' + esc(s.label) + '</div></div>';
+  }).join('') + '</div>';
+  // Charts
+  D.spotlight.charts.forEach(function(ch) {
+    spHTML += '<div class="chart-wrapper"><h3>' + esc(ch.title) + '</h3>';
+    if (ch.type === 'bar') {
+      spHTML += '<div class="chart-bars">' + ch.bars.map(function(b) {
+        return '<div class="chart-bar-row"><div class="chart-bar-label">' + esc(b.label) + '</div>' +
+          '<div class="chart-bar-container"><div class="chart-bar-fill ' + b.fillClass + '" style="width:' + b.width +
+          ';justify-content:center;' + (b.textColor ? 'color:' + b.textColor + ';' : '') + '">' +
+          (b.text ? esc(b.text) : '') + '</div></div></div>';
+      }).join('') + '</div>';
+    } else if (ch.type === 'comparison') {
+      spHTML += '<div class="comparison-chart">' + ch.bars.map(function(b) {
+        return '<div class="comparison-bar">' +
+          '<div class="comparison-bar-us" style="height:' + b.usHeight + ';"></div>' +
+          '<div class="comparison-bar-global" style="height:' + b.globalHeight + ';"></div>' +
+          '<div class="comparison-label">' + esc(b.label) + '</div></div>';
+      }).join('') + '</div>';
+    }
+    spHTML += '</div>';
+  });
+  // Legend
+  if (D.spotlight.legend) {
+    spHTML += '<div class="chart-legend">' + D.spotlight.legend.map(function(l) {
+      return '<span class="legend-item"><span class="legend-dot" style="background:' + l.color + ';"></span> ' + esc(l.text) + '</span>';
+    }).join('') + '</div>';
+  }
+  // Sources
+  spHTML += '<div class="spotlight-sources">' + D.spotlight.sources.map(function(s) {
+    return '<a href="' + esc(s.url) + '" class="source-link" target="_blank" rel="noopener noreferrer">' + esc(s.name) + '</a>';
+  }).join('') + '</div>';
+  document.getElementById('spotlight-content').innerHTML = spHTML;
+
+  // ─── Footer ───
+  document.getElementById('footer-text').textContent = D.footer;
+})();
+</script>
 
 </body>
 </html>
