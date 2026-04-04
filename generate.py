@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Morning Briefing Generator — Autonomous daily news digest for Caroline.
+Morning Briefing Generator â Autonomous daily news digest for Caroline.
 Runs via GitHub Actions on cron schedule. No laptop required.
 """
 
@@ -12,7 +12,7 @@ import yfinance as yf
 import anthropic
 import requests
 
-# ─── Config ───────────────────────────────────────────────────────────
+# âââ Config âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 NEWSAPI_KEY = os.environ.get("NEWSAPI_KEY", "")
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
 
@@ -52,7 +52,7 @@ DATE_SHORT = TODAY.strftime("%Y-%m-%d")
 WEEKDAY = TODAY.strftime("%A")
 
 
-# ─── Data Fetching ────────────────────────────────────────────────────
+# âââ Data Fetching ââââââââââââââââââââââââââââââââââââââââââââââââââââ
 
 def fetch_stock_data(tickers_list):
     """Fetch current price and daily change for a list of tickers."""
@@ -186,7 +186,7 @@ def fetch_rss_feeds():
     return results
 
 
-# ─── AI Summarization ─────────────────────────────────────────────────
+# âââ AI Summarization âââââââââââââââââââââââââââââââââââââââââââââââââ
 
 def generate_digest_content(news_headlines, rss_feeds, indices, sectors, watchlist):
     """Use Claude to synthesize raw data into a polished digest."""
@@ -226,14 +226,14 @@ Watchlist: {json.dumps(watchlist)}
 
 Write exactly these sections, each as 2-3 substantive paragraphs (5-10 sentences total per section). Use plain text, no markdown:
 
-1. TECH — AI, cybersecurity, major tech news
-2. POLITICS_WORLD — US, EU, major global political events
-3. POLITICS_AUSTRIA — Austrian domestic politics, policy. If no Austrian news found, write about recent Austrian developments you know about.
-4. MARKETS — Index performance, notable movers, economic data context
-5. GEOPOLITICS — Conflicts, diplomacy, trade tensions
-6. SPOTLIGHT_TITLE — A short title for today's most compelling data story
-7. SPOTLIGHT_TEXT — 2-3 paragraphs about the spotlight topic
-8. SPOTLIGHT_STATS — 4 key stats as "label:value" pairs, comma-separated
+1. TECH â AI, cybersecurity, major tech news
+2. POLITICS_WORLD â US, EU, major global political events
+3. POLITICS_AUSTRIA â Austrian domestic politics, policy. If no Austrian news found, write about recent Austrian developments you know about.
+4. MARKETS â Index performance, notable movers, economic data context
+5. GEOPOLITICS â Conflicts, diplomacy, trade tensions
+6. SPOTLIGHT_TITLE â A short title for today's most compelling data story
+7. SPOTLIGHT_TEXT â 2-3 paragraphs about the spotlight topic
+8. SPOTLIGHT_STATS â 4 key stats as "label:value" pairs, comma-separated
 
 Format your response as JSON:
 {{
@@ -270,7 +270,7 @@ Format your response as JSON:
     }
 
 
-# ─── HTML Generation ──────────────────────────────────────────────────
+# âââ HTML Generation ââââââââââââââââââââââââââââââââââââââââââââââââââ
 
 def generate_html(digest, indices, sectors, watchlist):
     """Generate the full standalone HTML page."""
@@ -278,14 +278,14 @@ def generate_html(digest, indices, sectors, watchlist):
     # Determine market status
     is_weekend = TODAY.weekday() >= 5
     if is_weekend:
-        market_note = f"Markets closed (weekend) · Last trading data shown"
+        market_note = f"Markets closed (weekend) Â· Last trading data shown"
     else:
         market_note = f"Data as of latest market close"
 
     # Build index ribbon
     ribbon_html = ""
     for idx in indices:
-        arrow = "▲" if idx["change"] >= 0 else "▼"
+        arrow = "â²" if idx["change"] >= 0 else "â¼"
         badge_class = "up" if idx["change"] >= 0 else "down"
         ribbon_html += f'''<div class="ribbon-item"><div class="label">{idx["name"]}</div><div class="value">{idx["value"]:,.2f}</div><span class="badge {badge_class}">{arrow} {abs(idx["change"]):.2f}%</span></div>\n'''
 
@@ -329,9 +329,9 @@ def generate_html(digest, indices, sectors, watchlist):
     wl_rows = ""
     wl_bars = ""
     for w in watchlist:
-        arrow = "▲" if w["change"] >= 0 else "▼"
+        arrow = "â²" if w["change"] >= 0 else "â¼"
         badge_class = "up" if w["change"] >= 0 else "down"
-        curr = "€" if w["currency"] == "EUR" else "$"
+        curr = "â¬" if w["currency"] == "EUR" else "$"
         wl_rows += f'<div class="watchlist-row"><div><span class="ticker">{w["ticker"]}</span><span class="name">{w["name"]}</span></div><div class="right"><span class="price">{curr}{w["price"]:,.2f}</span><span class="badge {badge_class}">{arrow} {abs(w["change"]):.2f}%</span></div></div>\n'
 
     for w in sorted_wl:
@@ -356,7 +356,7 @@ def generate_html(digest, indices, sectors, watchlist):
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Morning Briefing — {DATE_STR}</title>
+<title>Morning Briefing â {DATE_STR}</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -417,13 +417,74 @@ def generate_html(digest, indices, sectors, watchlist):
   .spotlight-stat .lab {{ font-size: 12px; color: var(--muted); margin-top: 2px; }}
   .stat-grid {{ display: flex; justify-content: space-around; flex-wrap: wrap; gap: 12px; margin-top: 20px; }}
   footer {{ text-align: center; padding: 16px; color: var(--muted); font-size: 12px; border-top: 1px solid var(--border); background: var(--card); }}
-  @media (max-width: 600px) {{
-    .header h1 {{ font-size: 20px; }}
-    .ribbon {{ gap: 8px; }}
-    .ribbon-item {{ flex: 1 0 100px; min-width: 100px; padding: 8px 10px; }}
-    .heatmap {{ grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }}
-    .watchlist-row {{ flex-wrap: wrap; gap: 8px; }}
-    .stat-grid {{ gap: 8px; }}
+  /* ── Tablet breakpoint ── */
+  @media (max-width: 768px) {{
+    .container {{ padding: 0 12px; }}
+    .header {{ padding: 22px 16px 16px; }}
+    .header h1 {{ font-size: 21px; }}
+    .header p {{ font-size: 12px; }}
+    .tabs {{ gap: 2px; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }}
+    .tabs::-webkit-scrollbar {{ display: none; }}
+    .tabs label {{ padding: 9px 12px; font-size: 12px; }}
+    .ribbon {{ flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; gap: 8px; padding-bottom: 6px; }}
+    .ribbon::-webkit-scrollbar {{ display: none; }}
+    .ribbon-item {{ flex: 0 0 130px; min-width: 130px; padding: 8px 12px; }}
+    .card {{ padding: 16px; margin-bottom: 12px; border-radius: 10px; }}
+    .card h3 {{ font-size: 15px; margin-bottom: 10px; }}
+    .card p {{ font-size: 13px; }}
+    .heatmap {{ grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 6px; }}
+    .heat-cell {{ padding: 10px 8px; }}
+    .heat-cell .name {{ font-size: 12px; }}
+    .heat-cell .val {{ font-size: 14px; }}
+    .bar-label {{ width: 75px; font-size: 11px; }}
+    .bar-value {{ width: 50px; font-size: 11px; }}
+    .bar-fill {{ font-size: 10px; min-width: 30px; }}
+    .watchlist-row {{ padding: 10px 12px; }}
+    .watchlist-row .ticker {{ font-size: 14px; }}
+    .watchlist-row .name {{ font-size: 12px; }}
+    .watchlist-row .price {{ font-size: 14px; }}
+    .stat-grid {{ gap: 10px; }}
+    .spotlight-stat .num {{ font-size: 20px; }}
+    .spotlight-stat .lab {{ font-size: 11px; }}
+  }}
+
+  /* ── Mobile breakpoint ── */
+  @media (max-width: 480px) {{
+    .container {{ padding: 0 8px; }}
+    .header {{ padding: 18px 12px 14px; }}
+    .header h1 {{ font-size: 18px; }}
+    .header p {{ font-size: 11px; }}
+    .tabs {{ gap: 0; padding-top: 8px; }}
+    .tabs label {{ padding: 8px 10px; font-size: 11px; }}
+    .tab-content {{ padding: 14px 0 30px; }}
+    .ribbon {{ gap: 6px; margin-bottom: 14px; }}
+    .ribbon-item {{ flex: 0 0 110px; min-width: 110px; padding: 7px 9px; border-radius: 8px; }}
+    .ribbon-item .label {{ font-size: 10px; }}
+    .ribbon-item .value {{ font-size: 13px; }}
+    .ribbon-item .badge {{ font-size: 11px; padding: 1px 5px; }}
+    .card {{ padding: 14px; margin-bottom: 10px; border-radius: 8px; }}
+    .card h3 {{ font-size: 14px; margin-bottom: 8px; }}
+    .card p {{ font-size: 13px; line-height: 1.5; }}
+    .heatmap {{ grid-template-columns: repeat(2, 1fr); gap: 5px; }}
+    .heat-cell {{ padding: 8px 6px; border-radius: 6px; }}
+    .heat-cell .name {{ font-size: 11px; }}
+    .heat-cell .val {{ font-size: 13px; }}
+    .bar-chart {{ margin: 8px 0; overflow-x: hidden; }}
+    .bar-row {{ margin-bottom: 6px; }}
+    .bar-label {{ width: 60px; font-size: 10px; }}
+    .bar-track {{ height: 20px; }}
+    .bar-fill {{ font-size: 9px; min-width: 24px; padding: 0 4px; }}
+    .bar-value {{ width: 48px; font-size: 10px; margin-left: 4px; }}
+    .watchlist-row {{ flex-wrap: wrap; gap: 6px; padding: 10px 12px; border-radius: 6px; margin-bottom: 6px; }}
+    .watchlist-row .right {{ width: 100%; justify-content: space-between; }}
+    .watchlist-row .ticker {{ font-size: 13px; }}
+    .watchlist-row .name {{ font-size: 11px; margin-left: 6px; }}
+    .watchlist-row .price {{ font-size: 13px; }}
+    .badge {{ font-size: 12px; padding: 1px 6px; }}
+    .stat-grid {{ flex-direction: column; align-items: center; gap: 14px; margin-top: 16px; }}
+    .spotlight-stat .num {{ font-size: 18px; }}
+    .spotlight-stat .lab {{ font-size: 11px; }}
+    footer {{ padding: 12px; font-size: 11px; }}
   }}
 </style>
 </head>
@@ -533,7 +594,7 @@ def generate_html(digest, indices, sectors, watchlist):
     return html
 
 
-# ─── Main ─────────────────────────────────────────────────────────────
+# âââ Main âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 
 def main():
     print(f"Generating morning briefing for {DATE_STR}...")
