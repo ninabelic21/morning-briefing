@@ -417,74 +417,13 @@ def generate_html(digest, indices, sectors, watchlist):
   .spotlight-stat .lab {{ font-size: 12px; color: var(--muted); margin-top: 2px; }}
   .stat-grid {{ display: flex; justify-content: space-around; flex-wrap: wrap; gap: 12px; margin-top: 20px; }}
   footer {{ text-align: center; padding: 16px; color: var(--muted); font-size: 12px; border-top: 1px solid var(--border); background: var(--card); }}
-  /* ── Tablet breakpoint ── */
-  @media (max-width: 768px) {{
-    .container {{ padding: 0 12px; }}
-    .header {{ padding: 22px 16px 16px; }}
-    .header h1 {{ font-size: 21px; }}
-    .header p {{ font-size: 12px; }}
-    .tabs {{ gap: 2px; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }}
-    .tabs::-webkit-scrollbar {{ display: none; }}
-    .tabs label {{ padding: 9px 12px; font-size: 12px; }}
-    .ribbon {{ flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; gap: 8px; padding-bottom: 6px; }}
-    .ribbon::-webkit-scrollbar {{ display: none; }}
-    .ribbon-item {{ flex: 0 0 130px; min-width: 130px; padding: 8px 12px; }}
-    .card {{ padding: 16px; margin-bottom: 12px; border-radius: 10px; }}
-    .card h3 {{ font-size: 15px; margin-bottom: 10px; }}
-    .card p {{ font-size: 13px; }}
-    .heatmap {{ grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 6px; }}
-    .heat-cell {{ padding: 10px 8px; }}
-    .heat-cell .name {{ font-size: 12px; }}
-    .heat-cell .val {{ font-size: 14px; }}
-    .bar-label {{ width: 75px; font-size: 11px; }}
-    .bar-value {{ width: 50px; font-size: 11px; }}
-    .bar-fill {{ font-size: 10px; min-width: 30px; }}
-    .watchlist-row {{ padding: 10px 12px; }}
-    .watchlist-row .ticker {{ font-size: 14px; }}
-    .watchlist-row .name {{ font-size: 12px; }}
-    .watchlist-row .price {{ font-size: 14px; }}
-    .stat-grid {{ gap: 10px; }}
-    .spotlight-stat .num {{ font-size: 20px; }}
-    .spotlight-stat .lab {{ font-size: 11px; }}
-  }}
-
-  /* ── Mobile breakpoint ── */
-  @media (max-width: 480px) {{
-    .container {{ padding: 0 8px; }}
-    .header {{ padding: 18px 12px 14px; }}
-    .header h1 {{ font-size: 18px; }}
-    .header p {{ font-size: 11px; }}
-    .tabs {{ gap: 0; padding-top: 8px; }}
-    .tabs label {{ padding: 8px 10px; font-size: 11px; }}
-    .tab-content {{ padding: 14px 0 30px; }}
-    .ribbon {{ gap: 6px; margin-bottom: 14px; }}
-    .ribbon-item {{ flex: 0 0 110px; min-width: 110px; padding: 7px 9px; border-radius: 8px; }}
-    .ribbon-item .label {{ font-size: 10px; }}
-    .ribbon-item .value {{ font-size: 13px; }}
-    .ribbon-item .badge {{ font-size: 11px; padding: 1px 5px; }}
-    .card {{ padding: 14px; margin-bottom: 10px; border-radius: 8px; }}
-    .card h3 {{ font-size: 14px; margin-bottom: 8px; }}
-    .card p {{ font-size: 13px; line-height: 1.5; }}
-    .heatmap {{ grid-template-columns: repeat(2, 1fr); gap: 5px; }}
-    .heat-cell {{ padding: 8px 6px; border-radius: 6px; }}
-    .heat-cell .name {{ font-size: 11px; }}
-    .heat-cell .val {{ font-size: 13px; }}
-    .bar-chart {{ margin: 8px 0; overflow-x: hidden; }}
-    .bar-row {{ margin-bottom: 6px; }}
-    .bar-label {{ width: 60px; font-size: 10px; }}
-    .bar-track {{ height: 20px; }}
-    .bar-fill {{ font-size: 9px; min-width: 24px; padding: 0 4px; }}
-    .bar-value {{ width: 48px; font-size: 10px; margin-left: 4px; }}
-    .watchlist-row {{ flex-wrap: wrap; gap: 6px; padding: 10px 12px; border-radius: 6px; margin-bottom: 6px; }}
-    .watchlist-row .right {{ width: 100%; justify-content: space-between; }}
-    .watchlist-row .ticker {{ font-size: 13px; }}
-    .watchlist-row .name {{ font-size: 11px; margin-left: 6px; }}
-    .watchlist-row .price {{ font-size: 13px; }}
-    .badge {{ font-size: 12px; padding: 1px 6px; }}
-    .stat-grid {{ flex-direction: column; align-items: center; gap: 14px; margin-top: 16px; }}
-    .spotlight-stat .num {{ font-size: 18px; }}
-    .spotlight-stat .lab {{ font-size: 11px; }}
-    footer {{ padding: 12px; font-size: 11px; }}
+  @media (max-width: 600px) {{
+    .header h1 {{ font-size: 20px; }}
+    .ribbon {{ gap: 8px; }}
+    .ribbon-item {{ flex: 1 0 100px; min-width: 100px; padding: 8px 10px; }}
+    .heatmap {{ grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }}
+    .watchlist-row {{ flex-wrap: wrap; gap: 8px; }}
+    .stat-grid {{ gap: 8px; }}
   }}
 </style>
 </head>
