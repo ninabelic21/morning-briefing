@@ -12,7 +12,8 @@ import yfinance as yf
 import anthropic
 import requests
 
-# ─── Config ───────────────────────────────────────────────────────────
+# ─── Config ───────────────────────────────────────────────────────────────────
+
 NEWSAPI_KEY = os.environ.get("NEWSAPI_KEY", "")
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
 
@@ -47,12 +48,11 @@ RSS_FEEDS = {
 }
 
 TODAY = datetime.date.today()
-DATE_STR = TODAY.strftime("%B %d, %Y")  # e.g. "April 7, 2026"
+DATE_STR = TODAY.strftime("%B %d, %Y")
 DATE_SHORT = TODAY.strftime("%Y-%m-%d")
 WEEKDAY = TODAY.strftime("%A")
 
-
-# ─── Data Fetching ────────────────────────────────────────────────────
+# ─── Data Fetching ────────────────────────────────────────────────────────────────
 
 def fetch_stock_data(tickers_list):
     """Fetch current price and daily change for a list of tickers."""
@@ -77,7 +77,6 @@ def fetch_stock_data(tickers_list):
             results.append({"ticker": ticker, "price": 0.0, "change": 0.0, "error": str(e)})
     return results
 
-
 def fetch_indices():
     """Fetch major index data including weekly performance."""
     results = []
@@ -96,13 +95,14 @@ def fetch_indices():
                 daily_change = 0.0
                 weekly_change = 0.0
             results.append({
-                "name": name, "value": round(close, 2),
-                "change": round(daily_change, 2), "weekChange": round(weekly_change, 2)
+                "name": name,
+                "value": round(close, 2),
+                "change": round(daily_change, 2),
+                "weekChange": round(weekly_change, 2)
             })
         except Exception:
             results.append({"name": name, "value": 0, "change": 0, "weekChange": 0})
     return results
-
 
 def fetch_sectors():
     """Fetch sector ETF daily performance."""
@@ -120,7 +120,6 @@ def fetch_sectors():
             results.append({"name": name, "change": 0.0})
     return results
 
-
 def fetch_watchlist():
     """Fetch watchlist stock data."""
     results = []
@@ -134,7 +133,6 @@ def fetch_watchlist():
             "currency": item["currency"],
         })
     return results
-
 
 def fetch_news_headlines():
     """Fetch news from NewsAPI across multiple categories."""
@@ -166,7 +164,6 @@ def fetch_news_headlines():
             all_articles[cat] = []
     return all_articles
 
-
 def fetch_rss_feeds():
     """Fetch RSS feeds for Austrian news and geopolitics."""
     results = {}
@@ -185,17 +182,16 @@ def fetch_rss_feeds():
         results[category] = items
     return results
 
-
-# ─── AI Summarization ─────────────────────────────────────────────────
+# ─── AI Summarization ─────────────────────────────────────────────────────────────
 
 def generate_digest_content(news_headlines, rss_feeds, indices, sectors, watchlist):
     """Use Claude to synthesize raw data into a polished digest."""
     client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
 
-    # Build context for Claude
     context = f"""Today is {WEEKDAY}, {DATE_STR}.
 
 ## Raw News Headlines (from NewsAPI)
+
 ### Tech:
 {json.dumps(news_headlines.get('tech', []), indent=2)}
 
@@ -215,9 +211,15 @@ def generate_digest_content(news_headlines, rss_feeds, indices, sectors, watchli
 {json.dumps(rss_feeds.get('geopolitics', []), indent=2)}
 
 ## Market Data:
-Indices: {json.dumps(indices)}
-Sectors: {json.dumps(sectors)}
-Watchlist: {json.dumps(watchlist)}
+
+Indices:
+{json.dumps(indices)}
+
+Sectors:
+{json.dumps(sectors)}
+
+Watchlist:
+{json.dumps(watchlist)}
 """
 
     prompt = f"""You are writing Caroline's daily morning news briefing. Using the raw data below, write a polished digest.
@@ -257,283 +259,159 @@ Format your response as JSON:
     )
 
     text = response.content[0].text
-    # Extract JSON from response
+
     start = text.find("{")
     end = text.rfind("}") + 1
     if start >= 0 and end > start:
         return json.loads(text[start:end])
+
     return {
         "tech": "Unable to generate digest today.",
-        "politics_world": "", "politics_austria": "", "markets": "",
-        "geopolitics": "", "spotlight_title": "Daily Update",
-        "spotlight_text": "", "spotlight_stats": []
+        "politics_world": "",
+        "politics_austria": "",
+        "markets": "",
+        "geopolitics": "",
+        "spotlight_title": "Daily Update",
+        "spotlight_text": "",
+        "spotlight_stats": []
     }
 
+# ─── Data.js Generation ────────────────────────────────────────────────────────────
 
-# ─── HTML Generation ──────────────────────────────────────────────────
+def generate_data_js(digest, indices, sectors, watchlist):
+    """Generate data.js with all briefing data in JSON format."""
 
-def generate_html(digest, indices, sectors, watchlist):
-    """Generate the full standalone HTML page."""
-
-    # Determine market status
     is_weekend = TODAY.weekday() >= 5
     if is_weekend:
         market_note = f"Markets closed (weekend) · Last trading data shown"
+        trading = {"closedMessage": "Markets closed today"}
     else:
         market_note = f"Data as of latest market close"
+        trading = {}
 
-    # Build index ribbon
-    ribbon_html = ""
+    market_ribbon = []
     for idx in indices:
-        arrow = "▲" if idx["change"] >= 0 else "▼"
-        badge_class = "up" if idx["change"] >= 0 else "down"
-        ribbon_html += f'''<div class="ribbon-item"><div class="label">{idx["name"]}</div><div class="value">{idx["value"]:,.2f}</div><span class="badge {badge_class}">{arrow} {abs(idx["change"]):.2f}%</span></div>\n'''
+        market_ribbon.append({
+            "label": idx["name"],
+            "value": f"{idx['value']:,.2f}",
+            "change": f"+{idx['change']:.2f}%" if idx['change'] >= 0 else f"−{abs(idx['change']):.2f}%"
+        })
 
-    # Build sector heatmap
-    heatmap_html = ""
+    digest_sections = []
+    section_map = {
+        "tech": {"title": "Tech & AI", "color": "#6366f1"},
+        "politics_world": {"title": "World Politics", "color": "#7c3aed"},
+        "politics_austria": {"title": "Austria", "color": "#d946ef"},
+        "markets": {"title": "Stock Market", "color": "#16a34a"},
+        "geopolitics": {"title": "Geopolitics", "color": "#ea580c"},
+    }
+
+    for key, metadata in section_map.items():
+        text = digest.get(key, "")
+        if text:
+            digest_sections.append({
+                "title": metadata["title"],
+                "color": metadata["color"],
+                "stories": [{
+                    "headline": metadata["title"],
+                    "text": text,
+                    "sources": []
+                }]
+            })
+
+    daily_change = []
+    max_change = max(abs(s["change"]) for s in sectors) if sectors else 2
     for s in sectors:
-        intensity = min(abs(s["change"]) / 3, 1)
+        width = max(min(abs(s["change"]) / max_change * 100, 100), 3) if max_change > 0 else 3
+        daily_change.append({
+            "label": s["name"],
+            "change": f"+{s['change']:.2f}%" if s["change"] >= 0 else f"−{abs(s['change']):.2f}%",
+            "width": width
+        })
+
+    sector_data = []
+    for s in sectors:
+        intensity = min(abs(s["change"]) / 3, 1) if s["change"] else 0
         if s["change"] >= 0:
+            color = "#3D7A47"
             bg = f"rgba(22,163,74,{0.08 + intensity * 0.25:.2f})"
-            color = "var(--green)"
-            sign = "+"
         else:
+            color = "#B5342B"
             bg = f"rgba(220,38,38,{0.08 + intensity * 0.25:.2f})"
-            color = "var(--red)"
-            sign = ""
-        heatmap_html += f'<div class="heat-cell" style="background:{bg}"><div class="name">{s["name"]}</div><div class="val" style="color:{color}">{sign}{s["change"]:.1f}%</div></div>\n'
 
-    # Build daily index bars
-    max_weekly = max(abs(idx["weekChange"]) for idx in indices) if indices else 5
-    index_daily_bars = ""
-    index_weekly_bars = ""
-    for idx in indices:
-        # Daily
-        width = max(min(abs(idx["change"]) / 2 * 100, 100), 3)
-        fill_class = "positive" if idx["change"] >= 0 else "negative"
-        sign = "+" if idx["change"] >= 0 else ""
-        color = "var(--green)" if idx["change"] >= 0 else "var(--red)"
-        index_daily_bars += f'<div class="bar-row"><span class="bar-label">{idx["name"]}</span><div class="bar-track"><div class="bar-fill {fill_class}" style="width:{width:.0f}%"></div></div><span class="bar-value" style="color:{color}">{sign}{idx["change"]:.2f}%</span></div>\n'
-        # Weekly
-        width_w = max(min(abs(idx["weekChange"]) / max_weekly * 90, 95), 3)
-        fill_class_w = "positive" if idx["weekChange"] >= 0 else "negative"
-        sign_w = "+" if idx["weekChange"] >= 0 else ""
-        color_w = "var(--green)" if idx["weekChange"] >= 0 else "var(--red)"
-        label_inside = f'{sign_w}{idx["weekChange"]:.1f}%' if width_w > 20 else ""
-        index_weekly_bars += f'<div class="bar-row"><span class="bar-label">{idx["name"]}</span><div class="bar-track"><div class="bar-fill {fill_class_w}" style="width:{width_w:.0f}%">{label_inside}</div></div><span class="bar-value" style="color:{color_w}">{sign_w}{idx["weekChange"]:.2f}%</span></div>\n'
+        sector_data.append({
+            "name": s["name"],
+            "value": f"+{s['change']:.1f}%" if s["change"] >= 0 else f"−{abs(s['change']):.1f}%",
+            "color": color,
+            "bg": bg
+        })
 
-    # Build watchlist
     sorted_wl = sorted(watchlist, key=lambda x: x["change"], reverse=True)
     max_wl_change = max(abs(w["change"]) for w in sorted_wl) if sorted_wl else 2
 
-    wl_rows = ""
-    wl_bars = ""
-    for w in watchlist:
-        arrow = "▲" if w["change"] >= 0 else "▼"
-        badge_class = "up" if w["change"] >= 0 else "down"
-        curr = "€" if w["currency"] == "EUR" else "$"
-        wl_rows += f'<div class="watchlist-row"><div><span class="ticker">{w["ticker"]}</span><span class="name">{w["name"]}</span></div><div class="right"><span class="price">{curr}{w["price"]:,.2f}</span><span class="badge {badge_class}">{arrow} {abs(w["change"]):.2f}%</span></div></div>\n'
-
+    watchlist_items = []
+    wl_chart = []
     for w in sorted_wl:
-        width = max(min(abs(w["change"]) / max_wl_change * 90, 98), 3)
-        fill_class = "positive" if w["change"] >= 0 else "negative"
-        sign = "+" if w["change"] >= 0 else ""
-        color = "var(--green)" if w["change"] >= 0 else "var(--red)"
-        label = f'{sign}{w["change"]:.2f}%' if width > 15 else ""
-        wl_bars += f'<div class="bar-row"><span class="bar-label">{w["ticker"]}</span><div class="bar-track"><div class="bar-fill {fill_class}" style="width:{width:.0f}%">{label}</div></div><span class="bar-value" style="color:{color}">{sign}{w["change"]:.2f}%</span></div>\n'
+        width = max(min(abs(w["change"]) / max_wl_change * 90, 98), 3) if max_wl_change > 0 else 3
+        curr_sym = "€" if w["currency"] == "EUR" else "$"
 
-    # Build spotlight stats
-    spotlight_stats_html = ""
-    for stat in digest.get("spotlight_stats", []):
-        color = {
-            "green": "var(--green)", "red": "var(--red)",
-            "gold": "var(--gold)", "accent": "var(--accent)"
-        }.get(stat.get("color", "accent"), "var(--accent)")
-        spotlight_stats_html += f'<div class="spotlight-stat"><div class="num" style="color:{color}">{stat["value"]}</div><div class="lab">{stat["label"]}</div></div>\n'
+        watchlist_items.append({
+            "ticker": w["ticker"],
+            "name": w["name"],
+            "priceEUR": f"{w['price']:.2f}" if w["currency"] == "EUR" else "",
+            "priceUSD": f"{w['price']:,.2f}" if w["currency"] == "USD" else "",
+            "change": f"+{w['change']:.2f}%" if w["change"] >= 0 else f"−{abs(w['change']):.2f}%"
+        })
 
-    html = f"""<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Morning Briefing — {DATE_STR}</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-  :root {{
-    --bg: #f8f9fc; --card: #ffffff; --text: #1e293b; --muted: #64748b;
-    --green: #16a34a; --red: #dc2626; --accent: #4f46e5; --accent-light: #6366f1;
-    --border: #e2e8f0; --gold: #d97706; --green-bg: rgba(22,163,74,0.08); --red-bg: rgba(220,38,38,0.08); --shadow-sm: 0 1px 2px rgba(0,0,0,0.04); --shadow-md: 0 4px 12px rgba(0,0,0,0.06);
-  }}
-  * {{ margin: 0; padding: 0; box-sizing: border-box; }}
-  body {{ background: var(--bg); color: var(--text); font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.6; }}
-  .header {{ background: linear-gradient(135deg, #4f46e5, #7c3aed); padding: 28px 20px 20px; border-bottom: 1px solid var(--border); }}
-  .header h1 {{ font-size: 24px; font-weight: 700; letter-spacing: -0.5px; color: #ffffff; }}
-  .header p {{ color: rgba(255,255,255,0.75); font-size: 13px; margin-top: 4px; }}
-  .container {{ max-width: 900px; margin: 0 auto; padding: 0 16px; }}
-  .tabs {{ display: flex; gap: 4px; border-bottom: 1px solid var(--border); padding-top: 12px; overflow-x: auto; background: var(--card); }}
-  .tabs input[type="radio"] {{ display: none; }}
-  .tabs label {{ padding: 10px 14px; font-size: 13px; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; white-space: nowrap; transition: all 0.2s; }}
-  .tabs label:hover {{ color: var(--text); }}
-  .tab-content {{ display: none; padding: 20px 0 40px; }}
-  #tab-digest:checked ~ .tab-content.digest-content,
-  #tab-markets:checked ~ .tab-content.markets-content,
-  #tab-watchlist:checked ~ .tab-content.watchlist-content,
-  #tab-spotlight:checked ~ .tab-content.spotlight-content {{ display: block; }}
-  #tab-digest:checked ~ .tabs label[for="tab-digest"],
-  #tab-markets:checked ~ .tabs label[for="tab-markets"],
-  #tab-watchlist:checked ~ .tabs label[for="tab-watchlist"],
-  #tab-spotlight:checked ~ .tabs label[for="tab-spotlight"] {{ color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }}
-  .card {{ background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: var(--shadow-sm); }}
-  .card h3 {{ font-size: 17px; margin-bottom: 12px; }}
-  .card p {{ color: var(--muted); font-size: 14px; margin-bottom: 10px; }}
-  .ribbon {{ display: flex; gap: 10px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 4px; }}
-  .ribbon-item {{ background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; flex: 1 0 120px; min-width: 120px; box-shadow: var(--shadow-sm); }}
-  .ribbon-item .label {{ font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }}
-  .ribbon-item .value {{ font-size: 15px; font-weight: 600; margin: 2px 0; }}
-  .badge {{ font-size: 13px; font-weight: 600; padding: 2px 7px; border-radius: 5px; display: inline-block; }}
-  .badge.up {{ color: var(--green); background: var(--green-bg); }}
-  .badge.down {{ color: var(--red); background: var(--red-bg); }}
-  .bar-chart {{ margin: 12px 0; }}
-  .bar-row {{ display: flex; align-items: center; margin-bottom: 8px; }}
-  .bar-label {{ width: 90px; font-size: 12px; color: var(--muted); flex-shrink: 0; }}
-  .bar-track {{ flex: 1; height: 24px; background: #f1f5f9; border-radius: 6px; position: relative; overflow: hidden; }}
-  .bar-fill {{ height: 100%; border-radius: 6px; display: flex; align-items: center; padding: 0 8px; font-size: 11px; font-weight: 600; min-width: 40px; transition: width 0.6s ease; }}
-  .bar-fill.positive {{ background: var(--green); color: #fff; }}
-  .bar-fill.negative {{ background: var(--red); color: #fff; }}
-  .bar-value {{ font-size: 12px; color: var(--muted); width: 55px; text-align: right; flex-shrink: 0; margin-left: 8px; }}
-  .heatmap {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; }}
-  .heat-cell {{ border-radius: 8px; padding: 12px 10px; text-align: center; border: 1px solid var(--border); }}
-  .heat-cell .name {{ font-size: 13px; font-weight: 500; }}
-  .heat-cell .val {{ font-size: 15px; font-weight: 700; margin-top: 4px; }}
-  .watchlist-row {{ display: flex; justify-content: space-between; align-items: center; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; margin-bottom: 8px; }}
-  .watchlist-row .ticker {{ font-weight: 700; font-size: 15px; }}
-  .watchlist-row .name {{ color: var(--muted); font-size: 13px; margin-left: 8px; }}
-  .watchlist-row .right {{ display: flex; align-items: center; gap: 14px; }}
-  .watchlist-row .price {{ font-weight: 600; font-size: 15px; }}
-  .spotlight-stat {{ text-align: center; }}
-  .spotlight-stat .num {{ font-size: 22px; font-weight: 700; }}
-  .spotlight-stat .lab {{ font-size: 12px; color: var(--muted); margin-top: 2px; }}
-  .stat-grid {{ display: flex; justify-content: space-around; flex-wrap: wrap; gap: 12px; margin-top: 20px; }}
-  footer {{ text-align: center; padding: 16px; color: var(--muted); font-size: 12px; border-top: 1px solid var(--border); background: var(--card); }}
-  @media (max-width: 600px) {{
-    .header h1 {{ font-size: 20px; }}
-    .ribbon {{ gap: 8px; }}
-    .ribbon-item {{ flex: 1 0 100px; min-width: 100px; padding: 8px 10px; }}
-    .heatmap {{ grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }}
-    .watchlist-row {{ flex-wrap: wrap; gap: 8px; }}
-    .stat-grid {{ gap: 8px; }}
-  }}
-</style>
-</head>
-<body>
+        wl_chart.append({
+            "label": w["ticker"],
+            "change": f"+{w['change']:.2f}%" if w["change"] >= 0 else f"−{abs(w['change']):.2f}%",
+            "width": width
+        })
 
-<div class="header">
-  <div class="container">
-    <h1>Good Morning, Caroline</h1>
-    <p>{WEEKDAY}, {DATE_STR} &middot; {market_note}</p>
-  </div>
-</div>
+    watchlist_data = {
+        "note": "Your personal watchlist",
+        "periods": {
+            "daily": {"chart": wl_chart, "items": watchlist_items},
+            "weekly": {"chart": wl_chart, "items": watchlist_items},
+            "monthly": {"chart": wl_chart, "items": watchlist_items},
+            "threeMonth": {"chart": wl_chart, "items": watchlist_items}
+        }
+    }
 
-<div class="container">
-  <input type="radio" name="tabs" id="tab-digest" checked>
-  <input type="radio" name="tabs" id="tab-markets">
-  <input type="radio" name="tabs" id="tab-watchlist">
-  <input type="radio" name="tabs" id="tab-spotlight">
+    markets_data = {
+        "dailyChange": daily_change,
+        "sectors": sector_data
+    }
 
-  <div class="tabs">
-    <label for="tab-digest">Digest</label>
-    <label for="tab-markets">Markets</label>
-    <label for="tab-watchlist">Watchlist</label>
-    <label for="tab-spotlight">Spotlight</label>
-  </div>
+    spotlight_stats = digest.get("spotlight_stats", [])
+    spotlight_data = {
+        "tag": "Market Insight",
+        "title": digest.get("spotlight_title", "Today's Spotlight"),
+        "intro": digest.get("spotlight_text", ""),
+        "stats": spotlight_stats,
+        "charts": [],
+        "legend": [],
+        "sources": []
+    }
 
-  <div class="tab-content digest-content">
-    <div class="ribbon">
-      {ribbon_html}
-    </div>
+    briefing_data = {
+        "date": f"{WEEKDAY}, {DATE_STR}",
+        "greeting": "Good Morning, Caroline",
+        "subtitle": market_note,
+        "trading": trading,
+        "marketRibbon": market_ribbon,
+        "digest": digest_sections,
+        "markets": markets_data,
+        "watchlist": watchlist_data,
+        "spotlight": spotlight_data,
+        "footer": f"Generated {DATE_STR} · Not financial advice"
+    }
 
-    <div class="card">
-      <h3>Tech &amp; AI</h3>
-      <p>{digest.get("tech", "No tech news available today.")}</p>
-    </div>
+    js_code = "window.BRIEFING = " + json.dumps(briefing_data, indent=2, ensure_ascii=False) + ";"
+    return js_code
 
-    <div class="card">
-      <h3>World Politics</h3>
-      <p>{digest.get("politics_world", "No world politics news available today.")}</p>
-    </div>
-
-    <div class="card">
-      <h3>Austria</h3>
-      <p>{digest.get("politics_austria", "No Austrian news available today.")}</p>
-    </div>
-
-    <div class="card">
-      <h3>Stock Market</h3>
-      <p>{digest.get("markets", "No market commentary available today.")}</p>
-    </div>
-
-    <div class="card">
-      <h3>Geopolitics</h3>
-      <p>{digest.get("geopolitics", "No geopolitics news available today.")}</p>
-    </div>
-  </div>
-
-  <div class="tab-content markets-content">
-    <div class="card">
-      <h3>Daily Index Performance</h3>
-      <div class="bar-chart">
-        {index_daily_bars}
-      </div>
-    </div>
-    <div class="card">
-      <h3>Weekly Performance</h3>
-      <div class="bar-chart">
-        {index_weekly_bars}
-      </div>
-    </div>
-    <div class="card">
-      <h3>Sector Heatmap</h3>
-      <div class="heatmap">
-        {heatmap_html}
-      </div>
-    </div>
-  </div>
-
-  <div class="tab-content watchlist-content">
-    <div class="card">
-      <h3>Your Watchlist</h3>
-      {wl_rows}
-    </div>
-    <div class="card">
-      <h3>Watchlist Daily Changes</h3>
-      <div class="bar-chart">
-        {wl_bars}
-      </div>
-    </div>
-  </div>
-
-  <div class="tab-content spotlight-content">
-    <div class="card">
-      <h3>{digest.get("spotlight_title", "Today's Spotlight")}</h3>
-      <p>{digest.get("spotlight_text", "No spotlight content available today.")}</p>
-      <div class="stat-grid">
-        {spotlight_stats_html}
-      </div>
-    </div>
-  </div>
-
-</div>
-
-<footer>Generated {DATE_STR} &middot; Not financial advice</footer>
-
-</body>
-</html>"""
-    return html
-
-
-# ─── Main ─────────────────────────────────────────────────────────────
+# ─── Main ────────────────────────────────────────────────────────────────────
 
 def main():
     print(f"Generating morning briefing for {DATE_STR}...")
@@ -556,15 +434,14 @@ def main():
     print("Generating digest with Claude...")
     digest = generate_digest_content(news, rss, indices, sectors, watchlist)
 
-    print("Generating HTML...")
-    html = generate_html(digest, indices, sectors, watchlist)
+    print("Generating data.js...")
+    data_js = generate_data_js(digest, indices, sectors, watchlist)
 
-    # Write to index.html (GitHub Pages will serve this)
-    with open("index.html", "w", encoding="utf-8") as f:
-        f.write(html)
+    # Write to data.js (GitHub Pages will serve this)
+    with open("data.js", "w", encoding="utf-8") as f:
+        f.write(data_js)
 
-    print(f"Done! index.html generated ({len(html):,} bytes)")
-
+    print(f"Done! data.js generated ({len(data_js):,} bytes)")
 
 if __name__ == "__main__":
     main()
