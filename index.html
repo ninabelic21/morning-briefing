@@ -1,221 +1,888 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Morning Briefing â April 06, 2026</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-  :root {
-    --bg: #f8f9fc; --card: #ffffff; --text: #1e293b; --muted: #64748b;
-    --green: #16a34a; --red: #dc2626; --accent: #4f46e5; --accent-light: #6366f1;
-    --border: #e2e8f0; --gold: #d97706; --green-bg: rgba(22,163,74,0.08); --red-bg: rgba(220,38,38,0.08); --shadow-sm: 0 1px 2px rgba(0,0,0,0.04); --shadow-md: 0 4px 12px rgba(0,0,0,0.06);
-  }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { background: var(--bg); color: var(--text); font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.6; }
-  .header { background: linear-gradient(135deg, #4f46e5, #7c3aed); padding: 28px 20px 20px; border-bottom: 1px solid var(--border); }
-  .header h1 { font-size: 24px; font-weight: 700; letter-spacing: -0.5px; color: #ffffff; }
-  .header p { color: rgba(255,255,255,0.75); font-size: 13px; margin-top: 4px; }
-  .container { max-width: 900px; margin: 0 auto; padding: 0 16px; }
-  .tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--border); padding-top: 12px; overflow-x: auto; background: var(--card); }
-  .tabs input[type="radio"] { display: none; }
-  .tabs label { padding: 10px 14px; font-size: 13px; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; white-space: nowrap; transition: all 0.2s; }
-  .tabs label:hover { color: var(--text); }
-  .tab-content { display: none; padding: 20px 0 40px; }
-  #tab-digest:checked ~ .tab-content.digest-content,
-  #tab-markets:checked ~ .tab-content.markets-content,
-  #tab-watchlist:checked ~ .tab-content.watchlist-content,
-  #tab-spotlight:checked ~ .tab-content.spotlight-content { display: block; }
-  #tab-digest:checked ~ .tabs label[for="tab-digest"],
-  #tab-markets:checked ~ .tabs label[for="tab-markets"],
-  #tab-watchlist:checked ~ .tabs label[for="tab-watchlist"],
-  #tab-spotlight:checked ~ .tabs label[for="tab-spotlight"] { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
-  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: var(--shadow-sm); }
-  .card h3 { font-size: 17px; margin-bottom: 12px; }
-  .card p { color: var(--muted); font-size: 14px; margin-bottom: 10px; }
-  .ribbon { display: flex; gap: 10px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 4px; }
-  .ribbon-item { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; flex: 1 0 120px; min-width: 120px; box-shadow: var(--shadow-sm); }
-  .ribbon-item .label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
-  .ribbon-item .value { font-size: 15px; font-weight: 600; margin: 2px 0; }
-  .badge { font-size: 13px; font-weight: 600; padding: 2px 7px; border-radius: 5px; display: inline-block; }
-  .badge.up { color: var(--green); background: var(--green-bg); }
-  .badge.down { color: var(--red); background: var(--red-bg); }
-  .bar-chart { margin: 12px 0; }
-  .bar-row { display: flex; align-items: center; margin-bottom: 8px; }
-  .bar-label { width: 90px; font-size: 12px; color: var(--muted); flex-shrink: 0; }
-  .bar-track { flex: 1; height: 24px; background: #f1f5f9; border-radius: 6px; position: relative; overflow: hidden; }
-  .bar-fill { height: 100%; border-radius: 6px; display: flex; align-items: center; padding: 0 8px; font-size: 11px; font-weight: 600; min-width: 40px; transition: width 0.6s ease; }
-  .bar-fill.positive { background: var(--green); color: #fff; }
-  .bar-fill.negative { background: var(--red); color: #fff; }
-  .bar-value { font-size: 12px; color: var(--muted); width: 55px; text-align: right; flex-shrink: 0; margin-left: 8px; }
-  .heatmap { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; }
-  .heat-cell { border-radius: 8px; padding: 12px 10px; text-align: center; border: 1px solid var(--border); }
-  .heat-cell .name { font-size: 13px; font-weight: 500; }
-  .heat-cell .val { font-size: 15px; font-weight: 700; margin-top: 4px; }
-  .watchlist-row { display: flex; justify-content: space-between; align-items: center; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; margin-bottom: 8px; }
-  .watchlist-row .ticker { font-weight: 700; font-size: 15px; }
-  .watchlist-row .name { color: var(--muted); font-size: 13px; margin-left: 8px; }
-  .watchlist-row .right { display: flex; align-items: center; gap: 14px; }
-  .watchlist-row .price { font-weight: 600; font-size: 15px; }
-  .spotlight-stat { text-align: center; }
-  .spotlight-stat .num { font-size: 22px; font-weight: 700; }
-  .spotlight-stat .lab { font-size: 12px; color: var(--muted); margin-top: 2px; }
-  .stat-grid { display: flex; justify-content: space-around; flex-wrap: wrap; gap: 12px; margin-top: 20px; }
-  footer { text-align: center; padding: 16px; color: var(--muted); font-size: 12px; border-top: 1px solid var(--border); background: var(--card); }
-  @media (max-width: 600px) {
-    .header h1 { font-size: 20px; }
-    .ribbon { gap: 8px; }
-    .ribbon-item { flex: 1 0 100px; min-width: 100px; padding: 8px 10px; }
-    .heatmap { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
-    .watchlist-row { flex-wrap: wrap; gap: 8px; }
-    .stat-grid { gap: 8px; }
-  }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Morning Briefing</title>
+  <style>
+    /* ─── Reset & Typography ─── */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      background: #EFE9E0;
+      color: #2C2418;
+      font-family: 'Georgia', 'Times New Roman', serif;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    h1, h2, h3 { font-weight: 400; letter-spacing: -0.3px; }
+    a { color: #8B6834; text-decoration: none; transition: color 0.2s; }
+    a:hover { color: #A67B2E; }
+
+    /* ─── Color Palette ─── */
+    :root {
+      --bg: #EFE9E0;
+      --card: #FFFFFF;
+      --text: #2C2418;
+      --muted: #8A7E6F;
+      --green: #3D7A47;
+      --red: #B5342B;
+      --accent: #8B6834;
+      --accentLight: #C4A265;
+      --gold: #A67B2E;
+      --border: #E2DBD0;
+      --warmGray: #EDE8E0;
+      --tagBg: #F0EAE0;
+      --sourceBg: #F5F0E8;
+    }
+
+    /* ─── Main Container ─── */
+    .container {
+      background: var(--bg);
+      min-height: 100vh;
+      max-width: 480px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ─── Header ─── */
+    .header {
+      padding: 32px 20px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .header-date {
+      font-size: 11px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    .header h1 {
+      font-size: 30px;
+      font-weight: 400;
+      letter-spacing: -0.5px;
+      margin: 0;
+      line-height: 1.2;
+    }
+
+    .header p {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 6px;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    /* ─── Tabs (CSS Radio Button Trick) ─── */
+    .tabs-container {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: var(--bg);
+      z-index: 100;
+    }
+
+    .tab-input {
+      display: none;
+    }
+
+    .tab-label {
+      flex: 1;
+      padding: 14px 0;
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--muted);
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      text-align: center;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      transition: all 0.2s;
+    }
+
+    /* Checked tab label styling (inputs are siblings of .tabs-container) */
+    #tab-digest:checked ~ .tabs-container label[for="tab-digest"],
+    #tab-markets:checked ~ .tabs-container label[for="tab-markets"],
+    #tab-watchlist:checked ~ .tabs-container label[for="tab-watchlist"],
+    #tab-spotlight:checked ~ .tabs-container label[for="tab-spotlight"] {
+      font-weight: 600;
+      color: var(--text);
+      border-bottom-color: var(--accent);
+    }
+
+    /* ─── Tab Content ─── */
+    .tab-content {
+      display: none;
+      padding: 20px 20px 40px;
+      flex: 1;
+    }
+
+    #tab-digest:checked ~ #digest-content,
+    #tab-markets:checked ~ #markets-content,
+    #tab-watchlist:checked ~ #watchlist-content,
+    #tab-spotlight:checked ~ #spotlight-content {
+      display: block;
+    }
+
+    /* ─── Market Ribbon ─── */
+    .market-ribbon {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      margin-bottom: 28px;
+      scroll-behavior: smooth;
+    }
+
+    .market-item {
+      flex: 0 0 auto;
+      min-width: 100px;
+    }
+
+    .market-label {
+      font-size: 10px;
+      color: var(--muted);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .market-value {
+      font-size: 16px;
+      font-weight: 600;
+      margin-top: 2px;
+    }
+
+    .market-change {
+      font-size: 13px;
+      font-weight: 600;
+      margin-top: 2px;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    .market-change.positive { color: var(--green); }
+    .market-change.negative { color: var(--red); }
+
+    /* ─── Story Section ─── */
+    .story-section {
+      margin-bottom: 32px;
+    }
+
+    .story-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .story-accent-bar {
+      width: 3px;
+      height: 22px;
+      border-radius: 2px;
+    }
+
+    .story-header h2 {
+      font-size: 18px;
+      font-weight: 400;
+      margin: 0;
+      letter-spacing: -0.3px;
+    }
+
+    .story-item {
+      margin-bottom: 20px;
+      padding-left: 13px;
+    }
+
+    .story-headline {
+      font-family: 'Georgia', serif;
+      font-size: 15.5px;
+      font-weight: 700;
+      color: var(--text);
+      margin: 0 0 6px 0;
+      line-height: 1.35;
+      letter-spacing: -0.2px;
+    }
+
+    .story-text {
+      font-size: 14.5px;
+      line-height: 1.75;
+      color: var(--text);
+      margin: 0 0 8px 0;
+      font-family: 'Georgia', 'Times New Roman', serif;
+    }
+
+    .story-sources {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+
+    .source-link {
+      font-size: 11px;
+      padding: 3px 9px;
+      border-radius: 6px;
+      text-decoration: none;
+      background: var(--tagBg);
+      color: var(--accent);
+      font-weight: 500;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      transition: background 0.2s;
+      display: inline-block;
+    }
+
+    .source-link:hover {
+      background: #E8DFD3;
+    }
+
+    /* ─── Markets Tab ─── */
+    .chart-section h3 {
+      font-size: 13px;
+      font-weight: 600;
+      margin: 28px 0 16px 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--muted);
+    }
+
+    .chart-section:first-of-type h3 {
+      margin-top: 0;
+    }
+
+    .bar-chart {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    .bar-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .bar-label {
+      width: 50px;
+      font-size: 12px;
+      font-weight: 600;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      text-align: right;
+    }
+
+    .bar-container {
+      flex: 1;
+      height: 24px;
+      background: #F5F5F5;
+      border-radius: 4px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .bar {
+      height: 100%;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 4px;
+      font-size: 10px;
+      font-weight: 600;
+      color: white;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    .bar.positive { background: var(--green); }
+    .bar.negative { background: var(--red); }
+
+    /* ─── Sector Heatmap ─── */
+    .sector-heatmap {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+    }
+
+    .sector-cell {
+      border-radius: 10px;
+      padding: 12px 8px;
+      text-align: center;
+    }
+
+    .sector-name {
+      font-size: 12px;
+      font-weight: 500;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    .sector-value {
+      font-size: 14px;
+      font-weight: 700;
+      margin-top: 2px;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    /* ─── Watchlist Tab ─── */
+    .period-toggle {
+      display: flex;
+      background: var(--warmGray);
+      border-radius: 10px;
+      padding: 3px;
+      margin-bottom: 20px;
+    }
+
+    .period-input {
+      display: none;
+    }
+
+    .period-label {
+      flex: 1;
+      padding: 9px 4px;
+      font-size: 12px;
+      font-weight: 400;
+      background: transparent;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      color: var(--muted);
+      text-align: center;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      transition: all 0.2s;
+    }
+
+    /* ─── Watchlist period label highlighting ─── */
+    #watch-daily:checked ~ .period-toggle label[for="watch-daily"],
+    #watch-weekly:checked ~ .period-toggle label[for="watch-weekly"],
+    #watch-monthly:checked ~ .period-toggle label[for="watch-monthly"],
+    #watch-threeMonth:checked ~ .period-toggle label[for="watch-threeMonth"] {
+      font-weight: 600;
+      background: var(--card);
+      color: var(--text);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    }
+
+    /* ─── Watchlist Items ─── */
+    .watchlist-content {
+      display: none;
+    }
+
+    #watch-daily:checked ~ .wl-daily { display: block; }
+    #watch-weekly:checked ~ .wl-weekly { display: block; }
+    #watch-monthly:checked ~ .wl-monthly { display: block; }
+    #watch-threeMonth:checked ~ .wl-threeMonth { display: block; }
+
+    /* ─── Diverging Chart ─── */
+    .diverging-chart { display: flex; flex-direction: column; gap: 6px; margin-bottom: 8px; }
+    .div-row { display: flex; align-items: center; height: 28px; }
+    .div-label {
+      width: 52px; font-size: 12px; font-weight: 600; text-align: right;
+      padding-right: 8px; flex-shrink: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    .div-track { flex: 1; display: flex; align-items: center; height: 100%; }
+    .div-left { flex: 1; display: flex; justify-content: flex-end; align-items: center; height: 100%; }
+    .div-right { flex: 1; display: flex; justify-content: flex-start; align-items: center; height: 100%; }
+    .div-center { width: 1px; background: var(--border); height: 100%; flex-shrink: 0; }
+    .div-bar {
+      height: 20px; border-radius: 3px; display: flex; align-items: center;
+      font-size: 10px; font-weight: 600; color: white; min-width: 2px;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    .div-bar.pos { background: var(--green); border-radius: 0 3px 3px 0; margin-left: 1px; }
+    .div-bar.neg { background: var(--red); border-radius: 3px 0 0 3px; margin-right: 1px; }
+    .div-outside {
+      font-size: 11px; font-weight: 600; padding: 0 5px; white-space: nowrap;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    .div-outside.pos-text { color: var(--green); }
+    .div-outside.neg-text { color: var(--red); }
+    .zero-label {
+      font-size: 9px; color: var(--muted); margin-bottom: 20px;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      padding-left: 52px; display: flex;
+    }
+    .zero-label span { flex: 1; text-align: center; }
+
+    .watchlist-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 13px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .watchlist-ticker {
+      font-weight: 700;
+      font-size: 14px;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    .watchlist-full-name {
+      color: var(--muted);
+      font-size: 12px;
+      margin-left: 8px;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    .watchlist-prices {
+      text-align: right;
+    }
+
+    .watchlist-price-eur {
+      font-weight: 600;
+      font-size: 14px;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    .watchlist-price-usd {
+      font-size: 11px;
+      color: var(--muted);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    .watchlist-change {
+      font-size: 12px;
+      font-weight: 600;
+      margin-top: 2px;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    .watchlist-change.positive { color: var(--green); }
+    .watchlist-change.negative { color: var(--red); }
+
+    .watchlist-note {
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 12px;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-style: italic;
+    }
+
+    /* ─── Spotlight Tab ─── */
+    .spotlight-header-tag {
+      font-size: 11px;
+      color: var(--gold);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 4px;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    .spotlight-title {
+      font-size: 24px;
+      font-weight: 400;
+      line-height: 1.3;
+      margin-bottom: 16px;
+      letter-spacing: -0.3px;
+    }
+
+    .spotlight-intro {
+      font-size: 14.5px;
+      line-height: 1.75;
+      color: var(--muted);
+      margin-bottom: 28px;
+    }
+
+    .spotlight-stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+
+    .stat-card {
+      text-align: center;
+      padding: 16px;
+      background: var(--warmGray);
+      border-radius: 12px;
+    }
+
+    .stat-value {
+      font-size: 22px;
+      font-weight: 600;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 3px;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    /* ─── CSS Bar Charts ─── */
+    .chart-wrapper {
+      margin-bottom: 32px;
+    }
+
+    .chart-wrapper h3 {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .chart-bars {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .chart-bar-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .chart-bar-label {
+      width: 70px;
+      font-size: 12px;
+      font-weight: 500;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      text-align: right;
+    }
+
+    .chart-bar-container {
+      flex: 1;
+      height: 20px;
+      background: #F5F5F5;
+      border-radius: 3px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .chart-bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 4px;
+      font-size: 9px;
+      font-weight: 600;
+      color: white;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    .recovery-fill { background: var(--accent); }
+    .tariff-fill { background: var(--red); opacity: 0.75; }
+    .us-fill { background: var(--accent); }
+    .global-fill { background: var(--gold); }
+
+    /* ─── Area Chart (CSS approximation) ─── */
+    .comparison-chart {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .comparison-bar {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      min-height: 120px;
+    }
+
+    .comparison-bar-us {
+      width: 100%;
+      background: linear-gradient(to top, var(--accent), var(--accent));
+      opacity: 0.6;
+      margin-bottom: 2px;
+      border-radius: 2px 2px 0 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 9px; font-weight: 700; color: white;
+      font-family: 'Inter', -apple-system, sans-serif;
+    }
+
+    .comparison-bar-global {
+      width: 100%;
+      background: linear-gradient(to top, var(--gold), var(--gold));
+      opacity: 0.6;
+      border-radius: 2px 2px 0 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 9px; font-weight: 700; color: white;
+      font-family: 'Inter', -apple-system, sans-serif;
+    }
+
+    .comparison-label {
+      font-size: 9px;
+      font-weight: 600;
+      margin-top: 4px;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      text-align: center;
+    }
+
+    .chart-legend {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      font-size: 11px;
+      color: var(--muted);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      margin-bottom: 20px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .legend-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .legend-us { background: var(--accent); }
+    .legend-global { background: var(--gold); }
+
+    /* ─── Spotlight Sources ─── */
+    .spotlight-sources {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      justify-content: center;
+    }
+
+    /* ─── Footer ─── */
+    .footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 11px;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 480px) {
+      .header { padding: 24px 16px 12px; }
+      .header h1 { font-size: 24px; }
+      .tab-label { font-size: 11px; padding: 12px 0; }
+    }
+  </style>
 </head>
 <body>
 
-<div class="header">
-  <div class="container">
-    <h1>Good Morning, Caroline</h1>
-    <p>Monday, April 06, 2026 &middot; Data as of latest market close</p>
-  </div>
-</div>
-
 <div class="container">
-  <input type="radio" name="tabs" id="tab-digest" checked>
-  <input type="radio" name="tabs" id="tab-markets">
-  <input type="radio" name="tabs" id="tab-watchlist">
-  <input type="radio" name="tabs" id="tab-spotlight">
-
-  <div class="tabs">
-    <label for="tab-digest">Digest</label>
-    <label for="tab-markets">Markets</label>
-    <label for="tab-watchlist">Watchlist</label>
-    <label for="tab-spotlight">Spotlight</label>
+  <!-- Header (populated by JS) -->
+  <div class="header">
+    <div class="header-date" id="h-date"></div>
+    <h1 id="h-greeting"></h1>
+    <p id="h-subtitle"></p>
   </div>
 
-  <div class="tab-content digest-content">
-    <div class="ribbon">
-      <div class="ribbon-item"><div class="label">S&P 500</div><div class="value">6,582.69</div><span class="badge up">â² 0.11%</span></div>
-<div class="ribbon-item"><div class="label">NASDAQ</div><div class="value">21,879.18</div><span class="badge up">â² 0.18%</span></div>
-<div class="ribbon-item"><div class="label">Dow Jones</div><div class="value">46,504.67</div><span class="badge down">â¼ 0.13%</span></div>
-<div class="ribbon-item"><div class="label">DAX</div><div class="value">23,168.08</div><span class="badge down">â¼ 0.56%</span></div>
+  <!-- Radio inputs (must be siblings of tabs-container and tab-content for CSS selectors) -->
+  <input type="radio" id="tab-digest" name="main-tab" class="tab-input" checked>
+  <input type="radio" id="tab-markets" name="main-tab" class="tab-input">
+  <input type="radio" id="tab-watchlist" name="main-tab" class="tab-input">
+  <input type="radio" id="tab-spotlight" name="main-tab" class="tab-input">
 
-    </div>
-
-    <div class="card">
-      <h3>Tech &amp; AI</h3>
-      <p>Taiwan's Foxconn, the world's largest contract electronics manufacturer, reported a robust 29.7% year-on-year increase in first-quarter revenue, driven by strong demand for artificial intelligence products. However, the company issued a cautionary note about the impact of volatile global politics on its operations, signaling that geopolitical tensions may pose headwinds to continued growth in the sector. Meanwhile, the AI boom is reaching unexpected corners of the economy: Indian film studios are increasingly embracing artificial intelligence to cut production costs and accelerate movie-making timelines, with AI dubbing helping studios overcome language barriers across India's diverse market. Despite mixed audience reactions to AI-generated content, studios are deploying the technology across multiple production stages.</p>
-    </div>
-
-    <div class="card">
-      <h3>World Politics</h3>
-      <p>Spain's La Liga title race has effectively concluded following Real Madrid's 2-1 defeat to Mallorca on Sunday, a result that handed Barcelona a commanding advantage after their 2-1 victory over Atletico Madrid. The loss marks a critical moment in the Spanish football season and appears to have decisively shifted momentum toward Barcelona's favor. In a separate development, Pope Leo XIV delivered his first Easter Mass as pontiff, calling upon global leaders to prioritize peace amid ongoing international tensions. The new pontiff's address to thousands gathered at St Peter's Square represents an important early signal of his diplomatic priorities.</p>
-    </div>
-
-    <div class="card">
-      <h3>Austria</h3>
-      <p>While no Austrian-specific news emerged in today's briefing, Austria remains engaged with European Union affairs and broader regional developments. Recent weeks have seen Austria participate in EU discussions surrounding energy security and geopolitical tensions affecting European stability. The country continues to balance its traditional neutrality with increasingly complex security challenges facing Central Europe, particularly regarding energy dependencies and relationships with neighboring countries experiencing significant international pressures.</p>
-    </div>
-
-    <div class="card">
-      <h3>Stock Market</h3>
-      <p>US equity indices showed mixed performance overnight, with the S&P 500 rising 0.11% to 6582.69 and the NASDAQ gaining 0.18% to 21879.18, though both indices remain slightly negative on a weekly basis. The Technology sector led gains with a 0.8% advance, driven in part by strong performances from NVIDIA (up 0.93% to $177.39) and Microsoft (up 1.11% to $373.46), reflecting continued investor appetite for AI-related equities. Consumer stocks declined 1.5%, while Real Estate outperformed with a 1.61% gain. Gold experienced a sharp 11.3% monthly decline in March—its steepest drop since the 2008 financial crisis—due to Middle East tensions and complex geopolitical dynamics, though the precious metal remains closely watched as an inflation hedge amid current market conditions.</p>
-    </div>
-
-    <div class="card">
-      <h3>Geopolitics</h3>
-      <p>Middle East tensions escalated sharply over the weekend as the United Arab Emirates reported that its air defenses were actively engaging Iranian missile and drone attacks, with Tehran indicating it was targeting aluminium industry facilities in the Gulf nation. The incident underscores rising military tensions in the region and adds uncertainty to markets. Additionally, a high-stakes situation is unfolding around Trump's deadline to Iran, which expires just after markets open on Monday, creating significant uncertainty for investors and traders who are closely monitoring developments. Separately, Hungary has alleged a plot to blow up a gas pipeline ahead of its upcoming elections, raising concerns about potential foreign interference or staged operations designed to influence voters.</p>
-    </div>
+  <!-- Tabs Navigation -->
+  <div class="tabs-container">
+    <label for="tab-digest" class="tab-label">Digest</label>
+    <label for="tab-markets" class="tab-label">Markets</label>
+    <label for="tab-watchlist" class="tab-label">Watchlist</label>
+    <label for="tab-spotlight" class="tab-label">Spotlight</label>
   </div>
 
-  <div class="tab-content markets-content">
-    <div class="card">
-      <h3>Daily Index Performance</h3>
-      <div class="bar-chart">
-        <div class="bar-row"><span class="bar-label">S&P 500</span><div class="bar-track"><div class="bar-fill positive" style="width:6%"></div></div><span class="bar-value" style="color:var(--green)">+0.11%</span></div>
-<div class="bar-row"><span class="bar-label">NASDAQ</span><div class="bar-track"><div class="bar-fill positive" style="width:9%"></div></div><span class="bar-value" style="color:var(--green)">+0.18%</span></div>
-<div class="bar-row"><span class="bar-label">Dow Jones</span><div class="bar-track"><div class="bar-fill negative" style="width:6%"></div></div><span class="bar-value" style="color:var(--red)">-0.13%</span></div>
-<div class="bar-row"><span class="bar-label">DAX</span><div class="bar-track"><div class="bar-fill negative" style="width:28%"></div></div><span class="bar-value" style="color:var(--red)">-0.56%</span></div>
+  <!-- ═══ DIGEST TAB ═══ -->
+  <div class="tab-content" id="digest-content"></div>
 
-      </div>
-    </div>
-    <div class="card">
-      <h3>Weekly Performance</h3>
-      <div class="bar-chart">
-        <div class="bar-row"><span class="bar-label">S&P 500</span><div class="bar-track"><div class="bar-fill negative" style="width:14%"></div></div><span class="bar-value" style="color:var(--red)">-0.14%</span></div>
-<div class="bar-row"><span class="bar-label">NASDAQ</span><div class="bar-track"><div class="bar-fill negative" style="width:22%">-0.2%</div></div><span class="bar-value" style="color:var(--red)">-0.23%</span></div>
-<div class="bar-row"><span class="bar-label">Dow Jones</span><div class="bar-track"><div class="bar-fill positive" style="width:16%"></div></div><span class="bar-value" style="color:var(--green)">+0.16%</span></div>
-<div class="bar-row"><span class="bar-label">DAX</span><div class="bar-track"><div class="bar-fill positive" style="width:90%">+0.9%</div></div><span class="bar-value" style="color:var(--green)">+0.92%</span></div>
+  <!-- ═══ MARKETS TAB ═══ -->
+  <div class="tab-content" id="markets-content"></div>
 
-      </div>
-    </div>
-    <div class="card">
-      <h3>Sector Heatmap</h3>
-      <div class="heatmap">
-        <div class="heat-cell" style="background:rgba(22,163,74,0.15)"><div class="name">Technology</div><div class="val" style="color:var(--green)">+0.8%</div></div>
-<div class="heat-cell" style="background:rgba(220,38,38,0.13)"><div class="name">Healthcare</div><div class="val" style="color:var(--red)">-0.6%</div></div>
-<div class="heat-cell" style="background:rgba(22,163,74,0.10)"><div class="name">Financials</div><div class="val" style="color:var(--green)">+0.2%</div></div>
-<div class="heat-cell" style="background:rgba(22,163,74,0.12)"><div class="name">Energy</div><div class="val" style="color:var(--green)">+0.5%</div></div>
-<div class="heat-cell" style="background:rgba(220,38,38,0.21)"><div class="name">Consumer</div><div class="val" style="color:var(--red)">-1.5%</div></div>
-<div class="heat-cell" style="background:rgba(220,38,38,0.11)"><div class="name">Industrial</div><div class="val" style="color:var(--red)">-0.4%</div></div>
-<div class="heat-cell" style="background:rgba(220,38,38,0.09)"><div class="name">Materials</div><div class="val" style="color:var(--red)">-0.1%</div></div>
-<div class="heat-cell" style="background:rgba(22,163,74,0.12)"><div class="name">Utilities</div><div class="val" style="color:var(--green)">+0.5%</div></div>
-<div class="heat-cell" style="background:rgba(22,163,74,0.21)"><div class="name">Real Estate</div><div class="val" style="color:var(--green)">+1.6%</div></div>
-<div class="heat-cell" style="background:rgba(22,163,74,0.11)"><div class="name">Telecom</div><div class="val" style="color:var(--green)">+0.4%</div></div>
+  <!-- ═══ WATCHLIST TAB ═══ -->
+  <div class="tab-content" id="watchlist-content"></div>
 
-      </div>
-    </div>
-  </div>
+  <!-- ═══ SPOTLIGHT TAB ═══ -->
+  <div class="tab-content" id="spotlight-content"></div>
 
-  <div class="tab-content watchlist-content">
-    <div class="card">
-      <h3>Your Watchlist</h3>
-      <div class="watchlist-row"><div><span class="ticker">NVDA</span><span class="name">NVIDIA</span></div><div class="right"><span class="price">$177.39</span><span class="badge up">â² 0.93%</span></div></div>
-<div class="watchlist-row"><div><span class="ticker">WMT</span><span class="name">Walmart</span></div><div class="right"><span class="price">$125.79</span><span class="badge up">â² 0.84%</span></div></div>
-<div class="watchlist-row"><div><span class="ticker">LLY</span><span class="name">Eli Lilly</span></div><div class="right"><span class="price">$935.58</span><span class="badge down">â¼ 1.98%</span></div></div>
-<div class="watchlist-row"><div><span class="ticker">MSFT</span><span class="name">Microsoft</span></div><div class="right"><span class="price">$373.46</span><span class="badge up">â² 1.11%</span></div></div>
-<div class="watchlist-row"><div><span class="ticker">MPWR</span><span class="name">Monolithic Power</span></div><div class="right"><span class="price">$1,118.49</span><span class="badge down">â¼ 0.09%</span></div></div>
-<div class="watchlist-row"><div><span class="ticker">A0RPWJ</span><span class="name">iShares MSCI EM</span></div><div class="right"><span class="price">â¬46.28</span><span class="badge down">â¼ 1.82%</span></div></div>
-<div class="watchlist-row"><div><span class="ticker">ETF146</span><span class="name">Amundi MSCI World</span></div><div class="right"><span class="price">â¬0.00</span><span class="badge up">â² 0.00%</span></div></div>
-
-    </div>
-    <div class="card">
-      <h3>Watchlist Daily Changes</h3>
-      <div class="bar-chart">
-        <div class="bar-row"><span class="bar-label">MSFT</span><div class="bar-track"><div class="bar-fill positive" style="width:50%">+1.11%</div></div><span class="bar-value" style="color:var(--green)">+1.11%</span></div>
-<div class="bar-row"><span class="bar-label">NVDA</span><div class="bar-track"><div class="bar-fill positive" style="width:42%">+0.93%</div></div><span class="bar-value" style="color:var(--green)">+0.93%</span></div>
-<div class="bar-row"><span class="bar-label">WMT</span><div class="bar-track"><div class="bar-fill positive" style="width:38%">+0.84%</div></div><span class="bar-value" style="color:var(--green)">+0.84%</span></div>
-<div class="bar-row"><span class="bar-label">ETF146</span><div class="bar-track"><div class="bar-fill positive" style="width:3%"></div></div><span class="bar-value" style="color:var(--green)">+0.00%</span></div>
-<div class="bar-row"><span class="bar-label">MPWR</span><div class="bar-track"><div class="bar-fill negative" style="width:4%"></div></div><span class="bar-value" style="color:var(--red)">-0.09%</span></div>
-<div class="bar-row"><span class="bar-label">A0RPWJ</span><div class="bar-track"><div class="bar-fill negative" style="width:83%">-1.82%</div></div><span class="bar-value" style="color:var(--red)">-1.82%</span></div>
-<div class="bar-row"><span class="bar-label">LLY</span><div class="bar-track"><div class="bar-fill negative" style="width:90%">-1.98%</div></div><span class="bar-value" style="color:var(--red)">-1.98%</span></div>
-
-      </div>
-    </div>
-  </div>
-
-  <div class="tab-content spotlight-content">
-    <div class="card">
-      <h3>AI Boom Drives Tech Gains Amid Geopolitical Anxiety</h3>
-      <p>Artificial intelligence continues to be the dominant growth driver across technology sectors, but the momentum faces headwinds from escalating geopolitical tensions. Foxconn's exceptional 29.7% revenue growth demonstrates robust market demand for AI-related hardware and services, yet the company's explicit warnings about volatile global politics signal that supply chains and international operations remain vulnerable to conflict. Beyond semiconductors, AI adoption is accelerating in unexpected sectors such as Indian film production, where studios are using the technology to overcome cost and logistical challenges. The technology sector's 0.8% market gain overnight reflects this positive sentiment, with chip stocks like NVIDIA and Microsoft leading the way.
-
-However, the geopolitical backdrop presents a counterweight to tech optimism. The ongoing escalation between Iran and the UAE, combined with Trump's ultimatum to Tehran expiring this morning, has created significant market uncertainty. Gold's 11.3% March decline—its worst month since 2008—suggests investors are rotating away from traditional safe-haven assets, possibly indicating confidence in a near-term resolution or alternatively, a shift toward other risk management strategies. The convergence of strong AI-driven fundamentals with elevated geopolitical risk creates a volatile environment where technology stocks may outperform or sharply correct depending on how international tensions unfold over the coming weeks.</p>
-      <div class="stat-grid">
-        <div class="spotlight-stat"><div class="num" style="color:var(--green)">+29.7% YoY</div><div class="lab">Foxconn Q1 revenue growth</div></div>
-<div class="spotlight-stat"><div class="num" style="color:var(--red)">-11.3%</div><div class="lab">Gold monthly decline (March)</div></div>
-<div class="spotlight-stat"><div class="num" style="color:var(--green)">+0.8%</div><div class="lab">Technology sector performance</div></div>
-<div class="spotlight-stat"><div class="num" style="color:var(--red)">-0.14%</div><div class="lab">S&P 500 weekly change</div></div>
-
-      </div>
-    </div>
-  </div>
-
+  <!-- Footer -->
+  <div class="footer" id="footer-text"></div>
 </div>
 
-<footer>Generated April 06, 2026 &middot; Not financial advice</footer>
+<script src="data.js"></script>
+<script>
+(function() {
+  var D = window.BRIEFING;
+  if (!D) { document.body.innerHTML = '<p style="padding:40px;text-align:center;color:#8A7E6F;">Loading data…</p>'; return; }
+
+  // ─── Helpers ───
+  function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+  function dir(v) { return parseFloat(v) >= 0 ? 'positive' : 'negative'; }
+
+  function sourcesHTML(sources) {
+    return '<div class="story-sources">' + sources.map(function(s) {
+      return '<a href="' + esc(s.url) + '" class="source-link" target="_blank" rel="noopener noreferrer">' + esc(s.name) + '</a>';
+    }).join('') + '</div>';
+  }
+
+  function barChart(items, extraClass) {
+    return '<div class="bar-chart"' + (extraClass ? ' style="margin-bottom:24px"' : '') + '>' + items.map(function(b) {
+      return '<div class="bar-row"><div class="bar-label">' + esc(b.label) + '</div>' +
+        '<div class="bar-container"><div class="bar ' + dir(b.change) + '" style="width:' + b.width + ';">' +
+        (b.showLabel !== false ? '<span>' + esc(b.change) + '</span>' : '') +
+        '</div></div></div>';
+    }).join('') + '</div>';
+  }
+
+  function divergingChart(items) {
+    var html = '<div class="diverging-chart">';
+    items.forEach(function(b) {
+      var isPos = parseFloat(b.change) >= 0;
+      html += '<div class="div-row"><div class="div-label">' + esc(b.label) + '</div><div class="div-track">';
+      if (isPos) {
+        html += '<div class="div-left"></div><div class="div-center"></div>';
+        html += '<div class="div-right"><div class="div-bar pos" style="width:' + b.width + ';"></div>';
+        html += '<span class="div-outside pos-text">' + esc(b.change) + '</span></div>';
+      } else {
+        html += '<div class="div-left"><span class="div-outside neg-text">' + esc(b.change) + '</span>';
+        html += '<div class="div-bar neg" style="width:' + b.width + ';"></div></div>';
+        html += '<div class="div-center"></div><div class="div-right"></div>';
+      }
+      html += '</div></div>';
+    });
+    html += '</div><div class="zero-label"><span>0%</span></div>';
+    return html;
+  }
+
+  function watchlistItems(items) {
+    return items.map(function(w) {
+      return '<div class="watchlist-item"><div>' +
+        '<span class="watchlist-ticker">' + esc(w.ticker) + '</span>' +
+        '<span class="watchlist-full-name">' + esc(w.name) + '</span>' +
+        '</div><div class="watchlist-prices">' +
+        '<div class="watchlist-price-eur">' + esc(w.priceEUR) + '</div>' +
+        '<div class="watchlist-price-usd">' + esc(w.priceUSD) + '</div>' +
+        '<div class="watchlist-change ' + dir(w.change) + '">' + esc(w.change) + '</div>' +
+        '</div></div>';
+    }).join('');
+  }
+
+  // ─── Header ───
+  document.getElementById('h-date').textContent = D.date;
+  document.getElementById('h-greeting').textContent = D.greeting;
+  document.getElementById('h-subtitle').textContent = D.subtitle;
+  document.title = 'Morning Briefing — ' + D.date;
+
+  // ─── Digest Tab ───
+  var digestHTML = '';
+  // Market ribbon
+  digestHTML += '<div class="market-ribbon">' + D.marketRibbon.map(function(m) {
+    return '<div class="market-item"><div class="market-label">' + esc(m.label) + '</div>' +
+      '<div class="market-value">' + esc(m.value) + '</div>' +
+      '<div class="market-change ' + dir(m.change) + '">' + esc(m.change) + '</div></div>';
+  }).join('') + '</div>';
+  // Story sections
+  D.digest.forEach(function(sec) {
+    digestHTML += '<div class="story-section"><div class="story-header">' +
+      '<div class="story-accent-bar" style="background:' + sec.color + ';"></div>' +
+      '<h2>' + esc(sec.title) + '</h2></div>';
+    sec.stories.forEach(function(st) {
+      digestHTML += '<div class="story-item">';
+      if (st.headline) { digestHTML += '<p class="story-headline">' + esc(st.headline) + '</p>'; }
+      digestHTML += '<p class="story-text">' + esc(st.text) + '</p>' + sourcesHTML(st.sources) + '</div>';
+    });
+    digestHTML += '</div>';
+  });
+  document.getElementById('digest-content').innerHTML = digestHTML;
+
+  // ─── Markets Tab ───
+  var mktsHTML = '';
+  mktsHTML += '<div class="chart-section"><h3>Daily Change</h3>' + barChart(D.markets.dailyChange) + '</div>';
+  mktsHTML += '<div class="chart-section"><h3>Sector Heatmap</h3><div class="sector-heatmap">';
+  D.markets.sectors.forEach(function(s) {
+    mktsHTML += '<div class="sector-cell" style="background:' + s.bg + ';"><div class="sector-name">' + esc(s.name) +
+      '</div><div class="sector-value" style="color:' + s.color + ';">' + esc(s.value) + '</div></div>';
+  });
+  mktsHTML += '</div></div>';
+  document.getElementById('markets-content').innerHTML = mktsHTML;
+
+  // ─── Watchlist Tab ───
+  var periods = D.watchlist.periods;
+  var periodKeys = ['daily','weekly','monthly','threeMonth'];
+  var periodLabels = ['1D','1W','1M','3M'];
+  var wHTML = '';
+  // Radio inputs first (direct children for CSS ~ combinator)
+  periodKeys.forEach(function(k, i) {
+    var id = 'watch-' + k;
+    wHTML += '<input type="radio" id="' + id + '" name="watch-period" class="period-input"' + (i === 0 ? ' checked' : '') + '>';
+  });
+  // Label bar inside .period-toggle wrapper
+  wHTML += '<div class="period-toggle">';
+  periodKeys.forEach(function(k, i) {
+    wHTML += '<label for="watch-' + k + '" class="period-label">' + periodLabels[i] + '</label>';
+  });
+  wHTML += '</div>';
+  periodKeys.forEach(function(k) {
+    var p = periods[k];
+    wHTML += '<div class="watchlist-content wl-' + k + '">' + divergingChart(p.chart) + watchlistItems(p.items) + '</div>';
+  });
+  wHTML += '<p class="watchlist-note">' + esc(D.watchlist.note) + '</p>';
+  document.getElementById('watchlist-content').innerHTML = wHTML;
+
+  // ─── Spotlight Tab ───
+  var spHTML = '';
+  spHTML += '<div class="spotlight-header-tag">' + esc(D.spotlight.tag) + '</div>';
+  spHTML += '<h2 class="spotlight-title">' + esc(D.spotlight.title) + '</h2>';
+  spHTML += '<p class="spotlight-intro">' + esc(D.spotlight.intro) + '</p>';
+  // Stats
+  spHTML += '<div class="spotlight-stats">' + D.spotlight.stats.map(function(s) {
+    return '<div class="stat-card"><div class="stat-value" style="color:' + s.color + ';">' + esc(s.value) +
+      '</div><div class="stat-label">' + esc(s.label) + '</div></div>';
+  }).join('') + '</div>';
+  // Charts
+  D.spotlight.charts.forEach(function(ch) {
+    spHTML += '<div class="chart-wrapper"><h3>' + esc(ch.title) + '</h3>';
+    if (ch.type === 'bar') {
+      spHTML += '<div class="chart-bars">' + ch.bars.map(function(b) {
+        return '<div class="chart-bar-row"><div class="chart-bar-label">' + esc(b.label) + '</div>' +
+          '<div class="chart-bar-container"><div class="chart-bar-fill ' + b.fillClass + '" style="width:' + b.width +
+          ';justify-content:center;' + (b.textColor ? 'color:' + b.textColor + ';' : '') + '">' +
+          (b.text ? esc(b.text) : '') + '</div></div></div>';
+      }).join('') + '</div>';
+    } else if (ch.type === 'comparison') {
+      spHTML += '<div class="comparison-chart">' + ch.bars.map(function(b) {
+        return '<div class="comparison-bar">' +
+          '<div class="comparison-bar-us" style="height:' + b.usHeight + ';">' + (b.usVal ? esc(b.usVal) : '') + '</div>' +
+          '<div class="comparison-bar-global" style="height:' + b.globalHeight + ';">' + (b.globalVal ? esc(b.globalVal) : '') + '</div>' +
+          '<div class="comparison-label">' + esc(b.label) + '</div></div>';
+      }).join('') + '</div>';
+    }
+    spHTML += '</div>';
+  });
+  // Legend
+  if (D.spotlight.legend) {
+    spHTML += '<div class="chart-legend">' + D.spotlight.legend.map(function(l) {
+      return '<span class="legend-item"><span class="legend-dot" style="background:' + l.color + ';"></span> ' + esc(l.text) + '</span>';
+    }).join('') + '</div>';
+  }
+  // Sources
+  spHTML += '<div class="spotlight-sources">' + D.spotlight.sources.map(function(s) {
+    return '<a href="' + esc(s.url) + '" class="source-link" target="_blank" rel="noopener noreferrer">' + esc(s.name) + '</a>';
+  }).join('') + '</div>';
+  document.getElementById('spotlight-content').innerHTML = spHTML;
+
+  // ─── Footer ───
+  document.getElementById('footer-text').textContent = D.footer;
+})();
+</script>
 
 </body>
 </html>
