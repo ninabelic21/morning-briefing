@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Morning Briefing Generator â Autonomous daily news digest for Caroline.
+Morning Briefing Generator — Autonomous daily news digest for Caroline.
 Runs via GitHub Actions on cron schedule. No laptop required.
 """
 
@@ -12,7 +12,7 @@ import yfinance as yf
 import anthropic
 import requests
 
-# âââ Config âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+# ─── Config ───────────────────────────────────────────────────────────
 NEWSAPI_KEY = os.environ.get("NEWSAPI_KEY", "")
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
 
@@ -52,7 +52,7 @@ DATE_SHORT = TODAY.strftime("%Y-%m-%d")
 WEEKDAY = TODAY.strftime("%A")
 
 
-# âââ Data Fetching ââââââââââââââââââââââââââââââââââââââââââââââââââââ
+# ─── Data Fetching ────────────────────────────────────────────────────
 
 def fetch_stock_data(tickers_list):
     """Fetch current price and daily change for a list of tickers."""
@@ -186,7 +186,7 @@ def fetch_rss_feeds():
     return results
 
 
-# âââ AI Summarization âââââââââââââââââââââââââââââââââââââââââââââââââ
+# ─── AI Summarization ─────────────────────────────────────────────────
 
 def generate_digest_content(news_headlines, rss_feeds, indices, sectors, watchlist):
     """Use Claude to synthesize raw data into a polished digest."""
@@ -226,14 +226,14 @@ Watchlist: {json.dumps(watchlist)}
 
 Write exactly these sections, each as 2-3 substantive paragraphs (5-10 sentences total per section). Use plain text, no markdown:
 
-1. TECH â AI, cybersecurity, major tech news
-2. POLITICS_WORLD â US, EU, major global political events
-3. POLITICS_AUSTRIA â Austrian domestic politics, policy. If no Austrian news found, write about recent Austrian developments you know about.
-4. MARKETS â Index performance, notable movers, economic data context
-5. GEOPOLITICS â Conflicts, diplomacy, trade tensions
-6. SPOTLIGHT_TITLE â A short title for today's most compelling data story
-7. SPOTLIGHT_TEXT â 2-3 paragraphs about the spotlight topic
-8. SPOTLIGHT_STATS â 4 key stats as "label:value" pairs, comma-separated
+1. TECH — AI, cybersecurity, major tech news
+2. POLITICS_WORLD — US, EU, major global political events
+3. POLITICS_AUSTRIA — Austrian domestic politics, policy. If no Austrian news found, write about recent Austrian developments you know about.
+4. MARKETS — Index performance, notable movers, economic data context
+5. GEOPOLITICS — Conflicts, diplomacy, trade tensions
+6. SPOTLIGHT_TITLE — A short title for today's most compelling data story
+7. SPOTLIGHT_TEXT — 2-3 paragraphs about the spotlight topic
+8. SPOTLIGHT_STATS — 4 key stats as "label:value" pairs, comma-separated
 
 Format your response as JSON:
 {{
@@ -270,7 +270,7 @@ Format your response as JSON:
     }
 
 
-# âââ HTML Generation ââââââââââââââââââââââââââââââââââââââââââââââââââ
+# ─── HTML Generation ──────────────────────────────────────────────────
 
 def generate_html(digest, indices, sectors, watchlist):
     """Generate the full standalone HTML page."""
@@ -278,14 +278,14 @@ def generate_html(digest, indices, sectors, watchlist):
     # Determine market status
     is_weekend = TODAY.weekday() >= 5
     if is_weekend:
-        market_note = f"Markets closed (weekend) Â· Last trading data shown"
+        market_note = f"Markets closed (weekend) · Last trading data shown"
     else:
         market_note = f"Data as of latest market close"
 
     # Build index ribbon
     ribbon_html = ""
     for idx in indices:
-        arrow = "â²" if idx["change"] >= 0 else "â¼"
+        arrow = "▲" if idx["change"] >= 0 else "▼"
         badge_class = "up" if idx["change"] >= 0 else "down"
         ribbon_html += f'''<div class="ribbon-item"><div class="label">{idx["name"]}</div><div class="value">{idx["value"]:,.2f}</div><span class="badge {badge_class}">{arrow} {abs(idx["change"]):.2f}%</span></div>\n'''
 
@@ -329,9 +329,9 @@ def generate_html(digest, indices, sectors, watchlist):
     wl_rows = ""
     wl_bars = ""
     for w in watchlist:
-        arrow = "â²" if w["change"] >= 0 else "â¼"
+        arrow = "▲" if w["change"] >= 0 else "▼"
         badge_class = "up" if w["change"] >= 0 else "down"
-        curr = "â¬" if w["currency"] == "EUR" else "$"
+        curr = "€" if w["currency"] == "EUR" else "$"
         wl_rows += f'<div class="watchlist-row"><div><span class="ticker">{w["ticker"]}</span><span class="name">{w["name"]}</span></div><div class="right"><span class="price">{curr}{w["price"]:,.2f}</span><span class="badge {badge_class}">{arrow} {abs(w["change"]):.2f}%</span></div></div>\n'
 
     for w in sorted_wl:
@@ -356,7 +356,7 @@ def generate_html(digest, indices, sectors, watchlist):
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Morning Briefing â {DATE_STR}</title>
+<title>Morning Briefing — {DATE_STR}</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -533,7 +533,7 @@ def generate_html(digest, indices, sectors, watchlist):
     return html
 
 
-# âââ Main âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+# ─── Main ─────────────────────────────────────────────────────────────
 
 def main():
     print(f"Generating morning briefing for {DATE_STR}...")
